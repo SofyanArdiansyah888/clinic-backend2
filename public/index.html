@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Backend 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .endpoints {
+            text-align: left;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .endpoints h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .endpoint {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .module {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 5px;
+        }
+        .module h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Clinic Backend 2</h1>
+        <div class="status">✅ API is running</div>
+        
+        <p>Welcome to the Clinic Management System Backend API</p>
+        
+        <div class="endpoints">
+            <h3>📡 Available Endpoints:</h3>
+            
+            <div class="module">
+                <h4>🔐 Authentication</h4>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/auth/login - User login
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/auth/logout - User logout (Auth required)
+                </div>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/auth/me - Get current user (Auth required)
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/auth/refresh - Refresh token (Auth required)
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>👥 User Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/user - List all users
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/user - Create new user
+                </div>
+                <div class="endpoint">
+                    <strong>PATCH</strong> /api/user/{id}/password - Change password
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>👨‍⚕️ Staff Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/staff - List all staff
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/staff - Create new staff
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏥 Patient Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/pasien - List all patients
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/pasien - Create new patient
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>📋 Queue Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/antrian - List all queues
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/antrian - Create new queue
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>📅 Appointment Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/appointment - List all appointments
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/appointment - Create new appointment
+                </div>
+                <div class="endpoint">
+                    <strong>PATCH</strong> /api/appointment/{id}/status - Update status
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>💊 Treatment Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/treatment - List all treatments
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/treatment - Create new treatment
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>📦 Inventory Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/barang - List all items
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/barang - Create new item
+                </div>
+                <div class="endpoint">
+                    <strong>PATCH</strong> /api/barang/{id}/stock - Update stock
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏢 Supplier Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/supplier - List all suppliers
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/supplier - Create new supplier
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🔄 Item Conversion</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/konversi-stok - List all conversions
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/konversi-stok - Create new conversion
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏭 Production Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/produksi-barang - List all productions
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/produksi-barang - Create new production
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>📊 Stock Opname</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/stok-opname - List all stock opnames
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/stok-opname - Create new stock opname
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>📋 Stock Card</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/kartu-stok - List all stock cards
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/kartu-stok - Create new stock card
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🎉 Promotions</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/promo - List all promotions
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/promo - Create new promotion
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/promo/validate - Validate promotion
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>👑 Membership</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/membership - List all memberships
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/membership - Create new membership
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/membership/{id}/add-points - Add points
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/membership/{id}/use-points - Use points
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏢 Branch Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/cabang - List all branches
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/cabang - Create new branch
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏦 Bank Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/bank - List all banks
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/bank - Create new bank
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>🏢 Company Management</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/perusahaan - List all companies
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /api/perusahaan - Create new company
+                </div>
+            </div>
+
+            <div class="module">
+                <h4>💚 Health Check</h4>
+                <div class="endpoint">
+                    <strong>GET</strong> /api/health - System status
+                </div>
+            </div>
+        </div>
+        
+        <p><em>Built with Laravel 10 - No Repository Pattern</em></p>
+    </div>
+</body>
+</html>
