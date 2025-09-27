@@ -168,3 +168,79 @@
 #7 D:\\projects\\scaleup\\clinic\\clinic-backend2\\artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #8 {main}
 "} 
+[2025-09-24 14:01:49] local.ERROR: rename(D:\projects\scaleup\clinic\clinic-backend2\bootstrap\cache\serA79C.tmp,D:\projects\scaleup\clinic\clinic-backend2\bootstrap\cache\services.php): Access is denied (code: 5) {"exception":"[object] (ErrorException(code: 0): rename(D:\\projects\\scaleup\\clinic\\clinic-backend2\\bootstrap\\cache\\serA79C.tmp,D:\\projects\\scaleup\\clinic\\clinic-backend2\\bootstrap\\cache\\services.php): Access is denied (code: 5) at D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:233)
+[stacktrace]
+#0 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'rename(D:\\\\proje...', 'D:\\\\projects\\\\sca...', 233)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():254}(2, 'rename(D:\\\\proje...', 'D:\\\\projects\\\\sca...', 233)
+#2 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(233): rename('D:\\\\projects\\\\sca...', 'D:\\\\projects\\\\sca...')
+#3 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(191): Illuminate\\Filesystem\\Filesystem->replace('D:\\\\projects\\\\sca...', '<?php return ar...')
+#4 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(163): Illuminate\\Foundation\\ProviderRepository->writeManifest(Array)
+#5 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#6 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(794): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#7 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#8 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(286): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#9 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#10 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#11 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#12 {main}
+"} 
+[2025-09-24 14:01:49] local.ERROR: rename(D:\projects\scaleup\clinic\clinic-backend2\bootstrap\cache\serA7A3.tmp,D:\projects\scaleup\clinic\clinic-backend2\bootstrap\cache\services.php): Access is denied (code: 5) {"exception":"[object] (ErrorException(code: 0): rename(D:\\projects\\scaleup\\clinic\\clinic-backend2\\bootstrap\\cache\\serA7A3.tmp,D:\\projects\\scaleup\\clinic\\clinic-backend2\\bootstrap\\cache\\services.php): Access is denied (code: 5) at D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:233)
+[stacktrace]
+#0 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'rename(D:\\\\proje...', 'D:\\\\projects\\\\sca...', 233)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():254}(2, 'rename(D:\\\\proje...', 'D:\\\\projects\\\\sca...', 233)
+#2 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(233): rename('D:\\\\projects\\\\sca...', 'D:\\\\projects\\\\sca...')
+#3 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(191): Illuminate\\Filesystem\\Filesystem->replace('D:\\\\projects\\\\sca...', '<?php return ar...')
+#4 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(163): Illuminate\\Foundation\\ProviderRepository->writeManifest(Array)
+#5 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#6 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(794): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#7 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#8 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(286): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#9 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#10 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#11 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#12 {main}
+"} 
+[2025-09-24 14:01:49] local.ERROR: Uncaught ReflectionException: Class "translator" does not exist in D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php:912
+Stack trace:
+#0 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php(912): ReflectionClass->__construct('translator')
+#1 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('translator')
+#2 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(986): Illuminate\Container\Container->resolve('translator', Array, true)
+#3 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('translator', Array)
+#4 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(971): Illuminate\Container\Container->make('translator', Array)
+#5 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\helpers.php(120): Illuminate\Foundation\Application->make('translator', Array)
+#6 Command line code(1): app('translator')
+#7 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [translator] does not exist. in D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php:914
+Stack trace:
+#0 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('translator')
+#1 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(986): Illuminate\Container\Container->resolve('translator', Array, true)
+#2 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('translator', Array)
+#3 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(971): Illuminate\Container\Container->make('translator', Array)
+#4 D:\projects\scaleup\clinic\clinic-backend2\vendor\laravel\framework\src\Illuminate\Foundation\helpers.php(120): Illuminate\Foundation\Application->make('translator', Array)
+#5 Command line code(1): app('translator')
+#6 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught ReflectionException: Class \"translator\" does not exist in D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:912
+Stack trace:
+#0 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(912): ReflectionClass->__construct('translator')
+#1 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('translator')
+#2 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(986): Illuminate\\Container\\Container->resolve('translator', Array, true)
+#3 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('translator', Array)
+#4 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(971): Illuminate\\Container\\Container->make('translator', Array)
+#5 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(120): Illuminate\\Foundation\\Application->make('translator', Array)
+#6 Command line code(1): app('translator')
+#7 {main}
+
+Next Illuminate\\Contracts\\Container\\BindingResolutionException: Target class [translator] does not exist. in D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:914
+Stack trace:
+#0 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('translator')
+#1 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(986): Illuminate\\Container\\Container->resolve('translator', Array, true)
+#2 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('translator', Array)
+#3 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(971): Illuminate\\Container\\Container->make('translator', Array)
+#4 D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(120): Illuminate\\Foundation\\Application->make('translator', Array)
+#5 Command line code(1): app('translator')
+#6 {main}
+  thrown at D:\\projects\\scaleup\\clinic\\clinic-backend2\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:914)
+[stacktrace]
+#0 {main}
+"} 

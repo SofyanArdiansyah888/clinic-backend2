@@ -3,7 +3,7 @@
 use App\Http\Controllers\AntrianController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('antrian')->group(function () {
+Route::prefix('antrians')->group(function () {
     Route::get('/', [AntrianController::class, 'index']);
     Route::post('/', [AntrianController::class, 'store']);
     Route::get('/{id}', [AntrianController::class, 'show']);

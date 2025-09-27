@@ -25,7 +25,6 @@ class AppointmentRequest extends FormRequest
         $rules = [
             'pasien_id' => 'required|exists:pasien,id',
             'staff_id' => 'required|exists:staff,id',
-            'cabang_id' => 'required|exists:cabang,id',
             'tanggal' => 'required|date|after:today',
             'waktu' => 'required|date_format:H:i',
             'jenis' => 'required|in:umum,spesialis,emergency',
@@ -38,7 +37,6 @@ class AppointmentRequest extends FormRequest
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules['pasien_id'] = 'sometimes|exists:pasien,id';
             $rules['staff_id'] = 'sometimes|exists:staff,id';
-            $rules['cabang_id'] = 'sometimes|exists:cabang,id';
             $rules['tanggal'] = 'sometimes|date';
             $rules['waktu'] = 'sometimes|date_format:H:i';
             $rules['jenis'] = 'sometimes|in:umum,spesialis,emergency';
@@ -58,8 +56,6 @@ class AppointmentRequest extends FormRequest
             'pasien_id.exists' => 'Pasien tidak ditemukan',
             'staff_id.required' => 'Staff wajib dipilih',
             'staff_id.exists' => 'Staff tidak ditemukan',
-            'cabang_id.required' => 'Cabang wajib dipilih',
-            'cabang_id.exists' => 'Cabang tidak ditemukan',
             'tanggal.required' => 'Tanggal wajib diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
             'tanggal.after' => 'Tanggal harus setelah hari ini',

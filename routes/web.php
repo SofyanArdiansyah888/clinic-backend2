@@ -13,17 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return response()->json(['message' => 'Clinic Backend API']);
-});
 
-// API Routes
-Route::prefix('api')->group(function () {
-    // Health check
-    Route::get('/health', function () {
-        return response()->json(['status' => 'healthy']);
-    });
-    
-    // Include module routes
-    require __DIR__.'/api.php';
-});
+
+Route::view('{any}', 'welcome')->where('any', '.*');
+// Route::get('/', function () {
+//     return response()->json(['message' => 'Clinic Backend API']);
+// });
+
+

@@ -24,7 +24,6 @@ class AntrianRequest extends FormRequest
     {
         $rules = [
             'pasien_id' => 'required|exists:pasien,id',
-            'cabang_id' => 'required|exists:cabang,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:menunggu,dalam_proses,selesai,dibatalkan',
             'catatan' => 'nullable|string',
@@ -34,7 +33,6 @@ class AntrianRequest extends FormRequest
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules['pasien_id'] = 'sometimes|exists:pasien,id';
-            $rules['cabang_id'] = 'sometimes|exists:cabang,id';
             $rules['tanggal'] = 'sometimes|date';
             $rules['status'] = 'sometimes|in:menunggu,dalam_proses,selesai,dibatalkan';
         }
@@ -50,8 +48,6 @@ class AntrianRequest extends FormRequest
         return [
             'pasien_id.required' => 'Pasien wajib dipilih',
             'pasien_id.exists' => 'Pasien tidak ditemukan',
-            'cabang_id.required' => 'Cabang wajib dipilih',
-            'cabang_id.exists' => 'Cabang tidak ditemukan',
             'tanggal.required' => 'Tanggal wajib diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
             'status.required' => 'Status wajib diisi',

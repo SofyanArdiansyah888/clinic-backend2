@@ -57,9 +57,8 @@ The application is organized into the following modules:
 8. **Staff** - Staff management
 9. **Supplier** - Supplier management
 10. **Bank** - Banking information
-11. **Cabang** - Branch management
-12. **Membership** - Membership management
-13. **Voucher** - Voucher and promotion management
+11. **Membership** - Membership management
+12. **Voucher** - Voucher and promotion management
 
 ## Installation
 

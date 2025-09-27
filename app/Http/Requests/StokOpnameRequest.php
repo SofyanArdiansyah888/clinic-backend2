@@ -24,7 +24,6 @@ class StokOpnameRequest extends FormRequest
     {
         $rules = [
             'tanggal' => 'required|date',
-            'cabang_id' => 'required|exists:cabang,id',
             'keterangan' => 'nullable|string',
             'status' => 'required|in:draft,selesai,dibatalkan',
             'is_active' => 'boolean',
@@ -33,7 +32,6 @@ class StokOpnameRequest extends FormRequest
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules['tanggal'] = 'sometimes|date';
-            $rules['cabang_id'] = 'sometimes|exists:cabang,id';
             $rules['status'] = 'sometimes|in:draft,selesai,dibatalkan';
         }
 
@@ -48,8 +46,6 @@ class StokOpnameRequest extends FormRequest
         return [
             'tanggal.required' => 'Tanggal wajib diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
-            'cabang_id.required' => 'Cabang wajib dipilih',
-            'cabang_id.exists' => 'Cabang tidak ditemukan',
             'status.required' => 'Status wajib diisi',
             'status.in' => 'Status tidak valid',
         ];

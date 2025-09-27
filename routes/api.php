@@ -43,6 +43,5 @@ require __DIR__.'/modules/stok-opname.php';
 require __DIR__.'/modules/kartu-stok.php';
 require __DIR__.'/modules/promo.php';
 require __DIR__.'/modules/membership.php';
-require __DIR__.'/modules/cabang.php';
 require __DIR__.'/modules/bank.php';
 require __DIR__.'/modules/perusahaan.php';
