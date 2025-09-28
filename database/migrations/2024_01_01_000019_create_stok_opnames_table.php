@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stok_opnames', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
+            $table->string('kode')->unique();
             $table->date('tanggal');
             $table->text('keterangan');
             $table->boolean('is_active')->default(true);

@@ -10,9 +10,6 @@ class StokOpname extends Model
     use HasFactory;
 
     protected $table = 'stok_opnames';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\GeneratorController;
 use App\Http\Controllers\KartuStokController;
 use App\Http\Controllers\KonversiStokController;
 use App\Http\Controllers\MembershipController;
@@ -42,6 +43,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Health check
 Route::get('/health', function () {
     return response()->json(['status' => 'healthy']);
+});
+
+// Generator Routes
+Route::prefix('generate-number')->group(function () {
+    Route::get('/', [GeneratorController::class, 'generateNumber']);
+    Route::get('/keys', [GeneratorController::class, 'getAvailableKeys']);
 });
 
 // Authentication Routes

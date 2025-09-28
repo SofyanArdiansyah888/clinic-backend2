@@ -10,9 +10,6 @@ class Bank extends Model
     use HasFactory;
 
     protected $table = 'banks';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

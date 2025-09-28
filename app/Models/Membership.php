@@ -10,9 +10,6 @@ class Membership extends Model
     use HasFactory;
 
     protected $table = 'memberships';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

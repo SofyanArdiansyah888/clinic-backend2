@@ -10,9 +10,6 @@ class ProduksiBarangDetail extends Model
     use HasFactory;
 
     protected $table = 'produksi_barang_details';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

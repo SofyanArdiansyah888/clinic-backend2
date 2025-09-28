@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('suppliers', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
+            $table->string('kode')->unique();
             $table->string('nama');
             $table->text('alamat')->nullable();
             $table->string('no_telp')->nullable();

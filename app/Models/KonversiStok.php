@@ -10,9 +10,6 @@ class KonversiStok extends Model
     use HasFactory;
 
     protected $table = 'konversi_stoks';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

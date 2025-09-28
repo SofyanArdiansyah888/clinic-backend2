@@ -12,7 +12,7 @@ class Appointment extends Model
     protected $table = 'appointments';
 
     protected $fillable = [
-        'id',
+        'kode',
         'pasien_id',
         'staff_id',
         'tanggal',

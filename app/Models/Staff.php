@@ -12,7 +12,7 @@ class Staff extends Model
     protected $table = 'staffs';
 
     protected $fillable = [
-        'id',
+        'kode',
         'nama',
         'nip',
         'jabatan',

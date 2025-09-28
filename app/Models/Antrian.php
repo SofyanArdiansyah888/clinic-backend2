@@ -12,7 +12,7 @@ class Antrian extends Model
     protected $table = 'antrians';
 
     protected $fillable = [
-        'id',
+        'kode',
         'pasien_id',
         'tanggal',
         'jam',

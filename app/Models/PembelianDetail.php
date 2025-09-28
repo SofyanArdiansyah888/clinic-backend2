@@ -12,7 +12,7 @@ class PembelianDetail extends Model
     protected $table = 'pembelian_details';
 
     protected $fillable = [
-        'id',
+        'kode',
         'pembelian_id',
         'barang_id',
         'qty',

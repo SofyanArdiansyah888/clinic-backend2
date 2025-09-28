@@ -10,9 +10,6 @@ class KartuStok extends Model
     use HasFactory;
 
     protected $table = 'kartu_stoks';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $guarded = [];
 

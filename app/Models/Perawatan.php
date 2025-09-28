@@ -12,7 +12,7 @@ class Perawatan extends Model
     protected $table = 'perawatans';
 
     protected $fillable = [
-        'id',
+        'kode',
         'pasien_id',
         'treatment_id',
         'staff_id',

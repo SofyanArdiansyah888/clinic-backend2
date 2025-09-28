@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('pasien_id');
-            $table->string('staff_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('pasien_id');
+            $table->unsignedBigInteger('staff_id');
             $table->date('tanggal');
             $table->time('jam');
             $table->enum('status', ['scheduled', 'confirmed', 'in_progress', 'completed', 'cancelled'])->default('scheduled');

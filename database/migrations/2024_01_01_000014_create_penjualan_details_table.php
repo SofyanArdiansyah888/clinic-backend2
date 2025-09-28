@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penjualan_details', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('penjualan_id');
-            $table->string('barang_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('penjualan_id');
+            $table->unsignedBigInteger('barang_id');
             $table->integer('qty');
             $table->decimal('harga_jual', 10, 2);
             $table->decimal('subtotal', 10, 2);

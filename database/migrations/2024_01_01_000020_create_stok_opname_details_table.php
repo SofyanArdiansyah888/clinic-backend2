@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stok_opname_details', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('stok_opname_id');
-            $table->string('barang_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('stok_opname_id');
+            $table->unsignedBigInteger('barang_id');
             $table->integer('stok_sistem');
             $table->integer('stok_fisik');
             $table->integer('selisih');

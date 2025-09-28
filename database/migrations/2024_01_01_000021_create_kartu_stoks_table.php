@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kartu_stoks', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('barang_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('barang_id');
             $table->date('tanggal');
             $table->text('keterangan');
             $table->integer('qty_masuk')->default(0);

@@ -12,7 +12,7 @@ class Supplier extends Model
     protected $table = 'suppliers';
 
     protected $fillable = [
-        'id',
+        'kode',
         'nama',
         'alamat',
         'no_telp',

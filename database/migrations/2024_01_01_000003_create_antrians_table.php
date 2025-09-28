@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('antrians', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('pasien_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('pasien_id');
             $table->date('tanggal');
             $table->time('jam');
             $table->enum('status', ['menunggu', 'dipanggil', 'selesai', 'batal'])->default('menunggu');

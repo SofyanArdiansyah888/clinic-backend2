@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pembelians', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('supplier_id');
-            $table->string('staff_id');
+            $table->id();
+            $table->string('kode')->unique();
+            $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('staff_id');
             $table->date('tanggal');
             $table->string('no_invoice')->unique();
             $table->decimal('total_harga', 10, 2)->default(0);
