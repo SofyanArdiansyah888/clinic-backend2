@@ -23,28 +23,31 @@ class BankRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'nama' => 'required|string|max:255',
-            'kode' => 'required|string|max:10|unique:banks,kode',
-            'alamat' => 'required|string',
-            'telepon' => 'required|string|max:20',
-            'email' => 'nullable|email',
-            'website' => 'nullable|url',
+            'no_bank' => 'required|string|max:50|unique:banks,no_bank',
+            'nama_bank' => 'required|string|max:255',
+            'jenis_bank' => 'required|in:bank,e-money',
+            'saldo_awal' => 'required|numeric|min:0',
+            'no_rekening' => 'required|string|max:50',
+            'atas_nama' => 'required|string|max:255',
             'is_active' => 'boolean',
         ];
 
-        // For update operations, make fields optional and handle unique kode validation
+        // For update operations, make fields optional and handle unique no_bank validation
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['nama'] = 'sometimes|string|max:255';
-            $rules['alamat'] = 'sometimes|string';
-            $rules['telepon'] = 'sometimes|string|max:20';
+            $rules['nama_bank'] = 'sometimes|string|max:255';
+            $rules['jenis_bank'] = 'sometimes|in:bank,e-money';
+            $rules['saldo_awal'] = 'sometimes|numeric|min:0';
+            $rules['no_rekening'] = 'sometimes|string|max:50';
+            $rules['atas_nama'] = 'sometimes|string|max:255';
             
-            // Handle unique kode validation for updates
-            if ($this->has('kode')) {
-                $rules['kode'] = [
+            // Handle unique no_bank validation for updates
+            if ($this->has('no_bank')) {
+                $bankId = $this->route('id');
+                $rules['no_bank'] = [
                     'sometimes',
                     'string',
-                    'max:10',
-                    Rule::unique('banks', 'kode')->ignore($this->route('bank')),
+                    'max:50',
+                    Rule::unique('banks', 'no_bank')->ignore($bankId),
                 ];
             }
         }
@@ -58,15 +61,20 @@ class BankRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama bank wajib diisi',
-            'kode.required' => 'Kode bank wajib diisi',
-            'kode.unique' => 'Kode bank sudah ada',
-            'kode.max' => 'Kode bank maksimal 10 karakter',
-            'alamat.required' => 'Alamat wajib diisi',
-            'telepon.required' => 'Telepon wajib diisi',
-            'telepon.max' => 'Telepon maksimal 20 karakter',
-            'email.email' => 'Format email tidak valid',
-            'website.url' => 'Format website tidak valid',
+            'no_bank.required' => 'Kode bank wajib diisi',
+            'no_bank.unique' => 'Kode bank sudah ada',
+            'no_bank.max' => 'Kode bank maksimal 50 karakter',
+            'nama_bank.required' => 'Nama bank wajib diisi',
+            'nama_bank.max' => 'Nama bank maksimal 255 karakter',
+            'jenis_bank.required' => 'Jenis bank wajib dipilih',
+            'jenis_bank.in' => 'Jenis bank harus bank atau e-money',
+            'saldo_awal.required' => 'Saldo awal wajib diisi',
+            'saldo_awal.numeric' => 'Saldo awal harus berupa angka',
+            'saldo_awal.min' => 'Saldo awal tidak boleh negatif',
+            'no_rekening.required' => 'Nomor rekening wajib diisi',
+            'no_rekening.max' => 'Nomor rekening maksimal 50 karakter',
+            'atas_nama.required' => 'Atas nama wajib diisi',
+            'atas_nama.max' => 'Atas nama maksimal 255 karakter',
         ];
     }
 }

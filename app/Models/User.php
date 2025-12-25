@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'username',
         'role',
+        'hak_akses',
         'is_active',
     ];
 
@@ -44,5 +45,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_active' => 'boolean',
+        'hak_akses' => 'array',
     ];
 }

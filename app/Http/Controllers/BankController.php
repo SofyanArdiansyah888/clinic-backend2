@@ -13,8 +13,37 @@ class BankController extends Controller
      */
     public function index()
     {
-        $banks = Bank::all();
-        return response()->json($banks);
+        $query = Bank::query();
+        
+        // Search by nama_bank
+        if (request()->has('search') && request('search')) {
+            $query->where('nama_bank', 'like', '%' . request('search') . '%');
+        }
+        
+        // Filter by jenis_bank
+        if (request()->has('jenis_bank') && request('jenis_bank')) {
+            $query->where('jenis_bank', request('jenis_bank'));
+        }
+        
+        // Filter by is_active
+        if (request()->has('is_active')) {
+            $query->where('is_active', request('is_active'));
+        }
+        
+        // Pagination
+        $perPage = request('per_page', 10);
+        $page = request('page', 1);
+        
+        $banks = $query->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
+        
+        // Format response sesuai dengan ResponseListType di frontend
+        return response()->json([
+            'data' => $banks->items(),
+            'page' => $banks->currentPage(),
+            'page_size' => $banks->perPage(),
+            'total_pages' => $banks->total(),
+            'total_rows' => $banks->total(),
+        ]);
     }
 
     /**
@@ -24,12 +53,13 @@ class BankController extends Controller
     {
         $bank = new Bank([
             'id' => Generator::generateID('BNK'),
-            'nama' => $request->nama,
-            'kode' => $request->kode,
-            'alamat' => $request->alamat,
-            'telepon' => $request->telepon,
-            'email' => $request->email,
-            'is_active' => true,
+            'no_bank' => $request->no_bank,
+            'nama_bank' => $request->nama_bank,
+            'jenis_bank' => $request->jenis_bank,
+            'saldo_awal' => $request->saldo_awal,
+            'no_rekening' => $request->no_rekening,
+            'atas_nama' => $request->atas_nama,
+            'is_active' => $request->is_active ?? true,
         ]);
         $bank->save();
 
@@ -72,8 +102,7 @@ class BankController extends Controller
             return response()->json(['message' => 'Bank not found'], 404);
         }
 
-        $bank->is_active = false;
-        $bank->save();
-        return response()->json(['message' => 'Bank deactivated successfully']);
+        $bank->delete();
+        return response()->json(null, 204);
     }
 }

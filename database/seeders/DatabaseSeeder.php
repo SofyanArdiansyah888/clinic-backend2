@@ -11,6 +11,7 @@ use App\Models\Bank;
 use App\Models\Treatment;
 use App\Models\Supplier;
 use App\Models\Barang;
+use App\Utils\Generator;
 
 class DatabaseSeeder extends Seeder
 {
@@ -180,44 +181,60 @@ class DatabaseSeeder extends Seeder
     private function seedBanks()
     {
         // Sesuai dengan struktur tabel banks (migration: create_banks_table)
-        // id: auto increment (tidak perlu di-set)
-        // kode: string, unique
-        // nama: string
-        // alamat: text
-        // telepon: string
-        // email: string
+        // id: string (menggunakan Generator::generateID('BNK'))
+        // no_bank: string, unique
+        // nama_bank: string
+        // jenis_bank: enum('bank', 'e-money')
+        // saldo_awal: decimal(15,2) default 0
+        // no_rekening: string
+        // atas_nama: string
         // is_active: boolean, default true
         // timestamps: otomatis
 
         $banks = [
             [
-                'kode' => 'BCA',
-                'nama' => 'Bank Central Asia',
-                'alamat' => 'Menara BCA, Grand Indonesia',
-                'telepon' => '021-500600',
-                'email' => 'cs@bca.co.id',
+                'no_bank' => 'BCA001',
+                'nama_bank' => 'Bank Central Asia',
+                'jenis_bank' => 'bank',
+                'saldo_awal' => 50000000.00,
+                'no_rekening' => '1234567890',
+                'atas_nama' => 'Klinik Sehat Mandiri',
                 'is_active' => true,
             ],
             [
-                'kode' => 'MANDIRI',
-                'nama' => 'Bank Mandiri',
-                'alamat' => 'Plaza Mandiri, Jakarta',
-                'telepon' => '021-52997777',
-                'email' => 'callcenter@bankmandiri.co.id',
+                'no_bank' => 'MANDIRI001',
+                'nama_bank' => 'Bank Mandiri',
+                'jenis_bank' => 'bank',
+                'saldo_awal' => 30000000.00,
+                'no_rekening' => '0987654321',
+                'atas_nama' => 'Klinik Sehat Mandiri',
                 'is_active' => true,
             ],
             [
-                'kode' => 'BRI',
-                'nama' => 'Bank Rakyat Indonesia',
-                'alamat' => 'Kantor Pusat BRI, Jakarta',
-                'telepon' => '021-5155666',
-                'email' => 'info@bri.co.id',
+                'no_bank' => 'BRI001',
+                'nama_bank' => 'Bank Rakyat Indonesia',
+                'jenis_bank' => 'bank',
+                'saldo_awal' => 25000000.00,
+                'no_rekening' => '1122334455',
+                'atas_nama' => 'Klinik Sehat Mandiri',
+                'is_active' => true,
+            ],
+            [
+                'no_bank' => 'OVO001',
+                'nama_bank' => 'OVO',
+                'jenis_bank' => 'e-money',
+                'saldo_awal' => 5000000.00,
+                'no_rekening' => '081234567890',
+                'atas_nama' => 'Klinik Sehat Mandiri',
                 'is_active' => true,
             ],
         ];
 
         foreach ($banks as $bank) {
-            Bank::create($bank);
+            Bank::create([
+                'id' => Generator::generateID('BNK'),
+                ...$bank
+            ]);
         }
 
         $this->command->info('Banks seeded successfully.');

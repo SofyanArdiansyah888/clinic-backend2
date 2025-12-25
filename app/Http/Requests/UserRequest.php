@@ -25,28 +25,32 @@ class UserRequest extends FormRequest
         $rules = [
             'nama' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'nullable|email|unique:users,email',
             'password' => 'required|string|min:6',
             'role' => 'required|string|in:admin,staff,doctor',
             'is_active' => 'boolean',
+            'hak_akses' => 'nullable|array',
         ];
 
         // For update operations, make fields optional and handle unique validations
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $id = $this->route('id');
             $rules['nama'] = 'sometimes|string|max:255';
             $rules['username'] = [
                 'sometimes',
                 'string',
                 'max:50',
-                Rule::unique('users', 'username')->ignore($this->route('user')),
+                Rule::unique('users', 'username')->ignore($id),
             ];
             $rules['email'] = [
                 'sometimes',
+                'nullable',
                 'email',
-                Rule::unique('users', 'email')->ignore($this->route('user')),
+                Rule::unique('users', 'email')->ignore($id),
             ];
             $rules['password'] = 'sometimes|string|min:6';
             $rules['role'] = 'sometimes|string|in:admin,staff,doctor';
+            $rules['hak_akses'] = 'sometimes|nullable|array';
         }
 
         return $rules;
