@@ -26,6 +26,7 @@ class Generator
         'BNK' => 'banks',
         'PRS' => 'perusahaans',
         'SUP' => 'suppliers',
+        'STF' => 'staffs',
     ];
 
     /**
@@ -47,10 +48,20 @@ class Generator
             throw new \InvalidArgumentException("Invalid model key: {$model}");
         }
 
-        // Get count of records for current year-month
-        $count = DB::table($tableName)
-            ->whereRaw("SUBSTRING(id, " . (strlen($model) + 2) . ", 4) = ?", [$year . $month])
-            ->count();
+        // Models that use 'kode' instead of 'id'
+        $modelsWithKode = ['PAS', 'STF', 'BNK'];
+        
+        if (in_array($model, $modelsWithKode)) {
+            // Get count of records for current year-month using kode column
+            $count = DB::table($tableName)
+                ->whereRaw("SUBSTRING(kode, " . (strlen($model) + 2) . ", 4) = ?", [$year . $month])
+                ->count();
+        } else {
+            // Get count of records for current year-month using id column
+            $count = DB::table($tableName)
+                ->whereRaw("SUBSTRING(id, " . (strlen($model) + 2) . ", 4) = ?", [$year . $month])
+                ->count();
+        }
 
         // Increment counter
         $counter = $count + 1;
@@ -80,7 +91,8 @@ class Generator
             'CAB' => 'Cabang',
             'BNK' => 'Bank',
             'PRS' => 'Perusahaan',
-            'SUP' => 'Supplier'
+            'SUP' => 'Supplier',
+            'STF' => 'Staff'
         ];
     }
 }

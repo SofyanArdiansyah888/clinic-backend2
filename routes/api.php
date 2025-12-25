@@ -75,6 +75,8 @@ Route::prefix('antrians')->group(function () {
 Route::prefix('pasien')->group(function () {
     Route::get('/', [PasienController::class, 'index']);
     Route::post('/', [PasienController::class, 'store']);
+    Route::post('/export', [PasienController::class, 'export']);
+    Route::post('/import', [PasienController::class, 'import']);
     Route::get('/{id}', [PasienController::class, 'show']);
     Route::put('/{id}', [PasienController::class, 'update']);
     Route::delete('/{id}', [PasienController::class, 'destroy']);
@@ -114,6 +116,7 @@ Route::prefix('user')->group(function () {
 Route::prefix('staff')->group(function () {
     Route::get('/', [StaffController::class, 'index']);
     Route::post('/', [StaffController::class, 'store']);
+    Route::post('/export', [StaffController::class, 'export']);
     Route::get('/{id}', [StaffController::class, 'show']);
     Route::put('/{id}', [StaffController::class, 'update']);
     Route::delete('/{id}', [StaffController::class, 'destroy']);
