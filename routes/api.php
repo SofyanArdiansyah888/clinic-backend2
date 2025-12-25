@@ -126,6 +126,7 @@ Route::prefix('staff')->group(function () {
 Route::prefix('supplier')->group(function () {
     Route::get('/', [SupplierController::class, 'index']);
     Route::post('/', [SupplierController::class, 'store']);
+    Route::post('/export', [SupplierController::class, 'export']);
     Route::get('/{id}', [SupplierController::class, 'show']);
     Route::put('/{id}', [SupplierController::class, 'update']);
     Route::delete('/{id}', [SupplierController::class, 'destroy']);
