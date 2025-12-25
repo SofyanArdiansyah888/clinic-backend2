@@ -44,14 +44,25 @@ class DatabaseSeeder extends Seeder
 
     private function seedPerusahaan()
     {
+        // Sesuai dengan struktur tabel perusahaans (migration: create_perusahaans_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // alamat: text
+        // telepon: string
+        // email: string
+        // website: string, nullable
+        // npwp: string, nullable
+        // is_active: boolean, default true
+        // timestamps: otomatis
         Perusahaan::create([
-            'id' => 'PRS001',
+            'kode' => 'PRS001',
             'nama' => 'Klinik Sehat Mandiri',
             'alamat' => 'Jl. Kesehatan No. 123, Jakarta Pusat 10110',
             'telepon' => '021-12345678',
             'email' => 'info@kliniksehat.com',
             'website' => 'www.kliniksehat.com',
-            'npwp' => '123456789012345',
+            'npwp' => '123456789012345', 
             'is_active' => true,
         ]);
 
@@ -60,6 +71,18 @@ class DatabaseSeeder extends Seeder
 
     private function seedUsers()
     {
+        // Sesuai dengan struktur tabel users (migration: create_users_table)
+        // id: auto increment (tidak perlu di-set)
+        // name: string
+        // email: string, unique
+        // username: string, unique
+        // email_verified_at: timestamp, nullable
+        // password: string
+        // role: enum('admin', 'staff', 'doctor'), default 'staff'
+        // is_active: boolean, default true
+        // remember_token: string, nullable
+        // timestamps: otomatis
+
         // Admin User
         User::create([
             'name' => 'Administrator',
@@ -97,9 +120,23 @@ class DatabaseSeeder extends Seeder
     }
 
     private function seedStaff()
-    {
+    { 
+        // Sesuai dengan struktur tabel staffs (migration: create_staffs_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // nip: string, unique
+        // jabatan: string
+        // departemen: string
+        // no_telp: string, nullable
+        // email: string, nullable
+        // alamat: text, nullable
+        // tanggal_bergabung: date
+        // is_active: boolean, default true
+        // timestamps: otomatis
+
         Staff::create([
-            'id' => 'STAFF001',
+            'kode' => 'STAFF001',
             'nama' => 'Dr. Sarah Wilson',
             'nip' => 'DOC001',
             'jabatan' => 'Dokter Utama',
@@ -112,7 +149,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Staff::create([
-            'id' => 'STAFF002',
+            'kode' => 'STAFF002',
             'nama' => 'Maria Garcia',
             'nip' => 'STF001',
             'jabatan' => 'Perawat',
@@ -125,7 +162,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Staff::create([
-            'id' => 'STAFF003',
+            'kode' => 'STAFF003',
             'nama' => 'Dr. Ahmad Rahman',
             'nip' => 'DOC002',
             'jabatan' => 'Dokter Spesialis',
@@ -142,29 +179,36 @@ class DatabaseSeeder extends Seeder
 
     private function seedBanks()
     {
+        // Sesuai dengan struktur tabel banks (migration: create_banks_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // alamat: text
+        // telepon: string
+        // email: string
+        // is_active: boolean, default true
+        // timestamps: otomatis
+
         $banks = [
             [
-                'id' => 'BNK001',
-                'nama' => 'Bank Central Asia',
                 'kode' => 'BCA',
+                'nama' => 'Bank Central Asia',
                 'alamat' => 'Menara BCA, Grand Indonesia',
                 'telepon' => '021-500600',
                 'email' => 'cs@bca.co.id',
                 'is_active' => true,
             ],
             [
-                'id' => 'BNK002',
-                'nama' => 'Bank Mandiri',
                 'kode' => 'MANDIRI',
+                'nama' => 'Bank Mandiri',
                 'alamat' => 'Plaza Mandiri, Jakarta',
                 'telepon' => '021-52997777',
                 'email' => 'callcenter@bankmandiri.co.id',
                 'is_active' => true,
             ],
             [
-                'id' => 'BNK003',
-                'nama' => 'Bank Rakyat Indonesia',
                 'kode' => 'BRI',
+                'nama' => 'Bank Rakyat Indonesia',
                 'alamat' => 'Kantor Pusat BRI, Jakarta',
                 'telepon' => '021-5155666',
                 'email' => 'info@bri.co.id',
@@ -181,9 +225,20 @@ class DatabaseSeeder extends Seeder
 
     private function seedTreatments()
     {
+        // Sesuai dengan struktur tabel treatments (migration: create_treatments_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // deskripsi: text, nullable
+        // durasi: integer (dalam menit)
+        // harga: decimal(10,2), default 0
+        // kategori: string
+        // is_active: boolean, default true
+        // timestamps: otomatis
+
         $treatments = [
             [
-                'id' => 'TRT001',
+                'kode' => 'TRT001',
                 'nama' => 'Konsultasi Umum',
                 'deskripsi' => 'Konsultasi dengan dokter umum untuk pemeriksaan kesehatan rutin',
                 'durasi' => 30,
@@ -192,7 +247,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'TRT002',
+                'kode' => 'TRT002',
                 'nama' => 'Pemeriksaan Tekanan Darah',
                 'deskripsi' => 'Pemeriksaan tekanan darah untuk monitoring kesehatan',
                 'durasi' => 15,
@@ -201,7 +256,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'TRT003',
+                'kode' => 'TRT003',
                 'nama' => 'Suntik Vitamin',
                 'deskripsi' => 'Suntik vitamin untuk meningkatkan daya tahan tubuh',
                 'durasi' => 20,
@@ -210,7 +265,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'TRT004',
+                'kode' => 'TRT004',
                 'nama' => 'Pemeriksaan Lab Darah',
                 'deskripsi' => 'Pemeriksaan laboratorium darah lengkap',
                 'durasi' => 45,
@@ -219,7 +274,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'TRT005',
+                'kode' => 'TRT005',
                 'nama' => 'Konsultasi Spesialis',
                 'deskripsi' => 'Konsultasi dengan dokter spesialis',
                 'durasi' => 60,
@@ -238,9 +293,21 @@ class DatabaseSeeder extends Seeder
 
     private function seedSuppliers()
     {
+        // Sesuai dengan struktur tabel suppliers (migration: create_suppliers_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // alamat: text, nullable
+        // no_telp: string, nullable
+        // email: string, nullable
+        // contact_person: string, nullable
+        // npwp: string, nullable
+        // is_active: boolean, default true
+        // timestamps: otomatis
+
         $suppliers = [
             [
-                'id' => 'SUP001',
+                'kode' => 'SUP001',
                 'nama' => 'PT. Farmasi Sehat',
                 'alamat' => 'Jl. Farmasi No. 100, Jakarta Barat',
                 'no_telp' => '021-12345678',
@@ -250,7 +317,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'SUP002',
+                'kode' => 'SUP002',
                 'nama' => 'CV. Alat Medis Jaya',
                 'alamat' => 'Jl. Medis No. 200, Jakarta Timur',
                 'no_telp' => '021-87654321',
@@ -260,7 +327,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'SUP003',
+                'kode' => 'SUP003',
                 'nama' => 'PT. Suplai Klinik',
                 'alamat' => 'Jl. Klinik No. 300, Jakarta Selatan',
                 'no_telp' => '021-555666777',
@@ -280,11 +347,23 @@ class DatabaseSeeder extends Seeder
 
     private function seedBarangs()
     {
+        // Sesuai dengan struktur tabel barangs (migration: create_barangs_table)
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama: string
+        // kategori: string
+        // satuan: string
+        // harga_beli: decimal(10,2), default 0
+        // harga_jual: decimal(10,2), default 0
+        // stok_minimal: integer, default 0
+        // stok_aktual: integer, default 0
+        // is_active: boolean, default true
+        // timestamps: otomatis
+
         $barangs = [
             [
-                'id' => 'BRG001',
-                'nama' => 'Paracetamol 500mg',
                 'kode' => 'PAR500',
+                'nama' => 'Paracetamol 500mg',
                 'kategori' => 'Obat',
                 'satuan' => 'Tablet',
                 'harga_beli' => 500.00,
@@ -294,9 +373,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'BRG002',
-                'nama' => 'Amoxicillin 500mg',
                 'kode' => 'AMO500',
+                'nama' => 'Amoxicillin 500mg',
                 'kategori' => 'Obat',
                 'satuan' => 'Kapsul',
                 'harga_beli' => 2000.00,
@@ -306,9 +384,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'BRG003',
-                'nama' => 'Tensimeter Digital',
                 'kode' => 'TENS001',
+                'nama' => 'Tensimeter Digital',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Unit',
                 'harga_beli' => 500000.00,
@@ -318,9 +395,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'BRG004',
-                'nama' => 'Stetoskop',
                 'kode' => 'STET001',
+                'nama' => 'Stetoskop',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Unit',
                 'harga_beli' => 300000.00,
@@ -330,9 +406,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'BRG005',
-                'nama' => 'Syringe 5ml',
                 'kode' => 'SYR5ML',
+                'nama' => 'Syringe 5ml',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Pcs',
                 'harga_beli' => 2500.00,
@@ -342,9 +417,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 'BRG006',
-                'nama' => 'Alkohol 70%',
                 'kode' => 'ALK70',
+                'nama' => 'Alkohol 70%',
                 'kategori' => 'Disinfektan',
                 'satuan' => 'Botol',
                 'harga_beli' => 15000.00,

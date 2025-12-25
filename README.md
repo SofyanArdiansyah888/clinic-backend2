@@ -2,6 +2,16 @@
 
 A Laravel-based backend application for clinic management system.
 
+## 📚 Dokumentasi
+
+Semua dokumentasi telah dipindahkan ke folder `dokumentasi/` di root project.
+
+- **[Dokumentasi Utama](../../dokumentasi/README.md)** - Index dokumentasi lengkap
+- **[Backend Documentation](../../dokumentasi/backend/README.md)** - Dokumentasi backend lengkap
+- **[Project Summary](../../dokumentasi/backend/project-summary.md)** - Ringkasan proyek
+- **[Generator Documentation](../../dokumentasi/backend/generator-endpoint-documentation.md)** - Dokumentasi generator
+- **[Seeder Documentation](../../dokumentasi/backend/seeder-documentation.md)** - Dokumentasi seeder
+
 ## Features
 
 - **User Management**: Authentication and authorization system
