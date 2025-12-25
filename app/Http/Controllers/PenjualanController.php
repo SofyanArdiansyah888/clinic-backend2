@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PenjualanBarangRequest;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
+use App\Models\Staff;
+use App\Models\KartuStok;
+use App\Models\Barang;
+use App\Utils\Generator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,15 +43,25 @@ class PenjualanController extends Controller
      */
     public function store(PenjualanBarangRequest $request): JsonResponse
     {
-
         DB::beginTransaction();
         try {
+            // Get default staff_id if not provided
+            $staffId = $request->staff_id;
+            if (!$staffId) {
+                $defaultStaff = Staff::where('is_active', true)->first();
+                if (!$defaultStaff) {
+                    throw new \Exception('No active staff found. Please provide staff_id or create an active staff.');
+                }
+                $staffId = $defaultStaff->id;
+            }
+
             $penjualan = Penjualan::create([
-                'pasien_id' => $request->pasien_id,
-                'staff_id' => $request->staff_id,
+                'kode' => Generator::generateID('PJL'),
+                'pasien_id' => $request->pasien_id ?? null,
+                'staff_id' => $staffId,
                 'tanggal' => $request->tanggal,
                 'no_invoice' => $request->no_invoice,
-                'status' => $request->status,
+                'status' => $request->status ?? 'draft',
                 'keterangan' => $request->keterangan,
                 'total_harga' => 0,
                 'is_active' => true,
@@ -58,7 +72,8 @@ class PenjualanController extends Controller
                 $subtotal = $detail['qty'] * $detail['harga_jual'];
                 $totalHarga += $subtotal;
                 
-                PenjualanDetail::create([
+                $penjualanDetail = PenjualanDetail::create([
+                    'kode' => Generator::generateID('PJD'),
                     'penjualan_id' => $penjualan->id,
                     'barang_id' => $detail['barang_id'],
                     'qty' => $detail['qty'],
@@ -66,6 +81,35 @@ class PenjualanController extends Controller
                     'subtotal' => $subtotal,
                     'is_active' => true,
                 ]);
+
+                // Create kartu stok entry
+                $barang = Barang::find($detail['barang_id']);
+                if ($barang) {
+                    // Get last saldo for this barang
+                    $lastKartuStok = KartuStok::where('barang_id', $detail['barang_id'])
+                        ->orderBy('tanggal', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+                    $saldoAwal = $lastKartuStok ? $lastKartuStok->saldo : ($barang->stok_aktual ?? 0);
+                    $saldo = $saldoAwal - $detail['qty']; // Decrease stock for sales
+
+                    $kartuStok = KartuStok::create([
+                        'kode' => Generator::generateID('KST'),
+                        'barang_id' => $detail['barang_id'],
+                        'tanggal' => $request->tanggal,
+                        'keterangan' => 'Penjualan - No. Invoice: ' . $request->no_invoice,
+                        'qty_masuk' => 0,
+                        'qty_keluar' => $detail['qty'],
+                        'saldo' => $saldo,
+                        'referensi' => $penjualan->kode,
+                        'is_active' => true,
+                    ]);
+
+                    // Update stok_aktual
+                    $barang->stok_aktual = $saldo;
+                    $barang->save();
+                }
             }
 
             $penjualan->update(['total_harga' => $totalHarga]);
@@ -77,7 +121,15 @@ class PenjualanController extends Controller
             
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => 'Failed to create sale'], 500);
+            $errorMessage = 'Failed to create sale';
+            if (config('app.debug')) {
+                $errorMessage .= ': ' . $e->getMessage();
+            }
+            return response()->json([
+                'message' => $errorMessage,
+                'error' => config('app.debug') ? $e->getMessage() : null,
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null,
+            ], 500);
         }
     }
 

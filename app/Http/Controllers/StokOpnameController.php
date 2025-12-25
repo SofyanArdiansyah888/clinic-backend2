@@ -6,7 +6,9 @@ use App\Http\Requests\StokOpnameRequest;
 use App\Models\StokOpname;
 use App\Models\StokOpnameDetail;
 use App\Models\Barang;
+use App\Models\KartuStok;
 use App\Utils\Generator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StokOpnameController extends Controller
@@ -14,10 +16,28 @@ class StokOpnameController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $stokOpnames = StokOpname::with('details.barang')->get();
-        return response()->json($stokOpnames);
+        $query = StokOpname::with('details.barang');
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('kode', 'like', "%{$search}%")
+                  ->orWhere('keterangan', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->has('tanggal')) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        $stokOpnames = $query->orderBy('tanggal', 'desc')->orderBy('id', 'desc')->get();
+        
+        return response()->json([
+            'data' => $stokOpnames,
+            'total' => $stokOpnames->count(),
+        ]);
     }
 
     /**
@@ -25,35 +45,65 @@ class StokOpnameController extends Controller
      */
     public function store(StokOpnameRequest $request)
     {
-
         DB::beginTransaction();
         try {
-            $stokOpname = new StokOpname([
-                'id' => Generator::generateID('STO'),
+            $stokOpname = StokOpname::create([
+                'kode' => Generator::generateID('STO'),
                 'tanggal' => $request->tanggal,
-                'keterangan' => $request->keterangan,
+                'keterangan' => $request->keterangan ?? 'Stok Opname',
                 'is_active' => true,
             ]);
-            $stokOpname->save();
 
             foreach ($request->details as $detail) {
                 $barang = Barang::find($detail['barang_id']);
-                $selisih = $detail['stok_fisik'] - $barang->stok;
+                if (!$barang) {
+                    continue;
+                }
 
-                $stokOpnameDetail = new StokOpnameDetail([
-                    'id' => Generator::generateID('STD'),
+                $stokSistem = $barang->stok_aktual ?? 0;
+                $stokFisik = $detail['stok_fisik'];
+                $selisih = $stokFisik - $stokSistem;
+
+                $stokOpnameDetail = StokOpnameDetail::create([
+                    'kode' => Generator::generateID('STD'),
                     'stok_opname_id' => $stokOpname->id,
                     'barang_id' => $detail['barang_id'],
-                    'stok_sistem' => $barang->stok,
-                    'stok_fisik' => $detail['stok_fisik'],
+                    'stok_sistem' => $stokSistem,
+                    'stok_fisik' => $stokFisik,
                     'selisih' => $selisih,
                     'keterangan' => $detail['keterangan'] ?? null,
                     'is_active' => true,
                 ]);
-                $stokOpnameDetail->save();
+
+                // Get last saldo for this barang
+                $lastKartuStok = KartuStok::where('barang_id', $detail['barang_id'])
+                    ->orderBy('tanggal', 'desc')
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                $saldoAwal = $lastKartuStok ? $lastKartuStok->saldo : $stokSistem;
+                $saldo = $stokFisik; // New stock after opname
+
+                // Create kartu stok entry
+                if ($selisih != 0) {
+                    $qtyMasuk = $selisih > 0 ? $selisih : 0;
+                    $qtyKeluar = $selisih < 0 ? abs($selisih) : 0;
+
+                    KartuStok::create([
+                        'kode' => Generator::generateID('KST'),
+                        'barang_id' => $detail['barang_id'],
+                        'tanggal' => $request->tanggal,
+                        'keterangan' => 'Stok Opname - ' . ($request->keterangan ?? 'Penyesuaian Stok'),
+                        'qty_masuk' => $qtyMasuk,
+                        'qty_keluar' => $qtyKeluar,
+                        'saldo' => $saldo,
+                        'referensi' => $stokOpname->kode,
+                        'is_active' => true,
+                    ]);
+                }
 
                 // Update stock to match physical count
-                $barang->stok = $detail['stok_fisik'];
+                $barang->stok_aktual = $stokFisik;
                 $barang->save();
             }
 
@@ -61,7 +111,15 @@ class StokOpnameController extends Controller
             return response()->json($stokOpname->load('details.barang'), 201);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => 'Error creating stock opname: ' . $e->getMessage()], 500);
+            $errorMessage = 'Error creating stock opname';
+            if (config('app.debug')) {
+                $errorMessage .= ': ' . $e->getMessage();
+            }
+            return response()->json([
+                'message' => $errorMessage,
+                'error' => config('app.debug') ? $e->getMessage() : null,
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null,
+            ], 500);
         }
     }
 

@@ -27,6 +27,11 @@ class Generator
         'PRS' => 'perusahaans',
         'SUP' => 'suppliers',
         'STF' => 'staffs',
+        'PBL' => 'pembelians',
+        'PBD' => 'pembelian_details',
+        'PJL' => 'penjualans',
+        'PJD' => 'penjualan_details',
+        'STD' => 'stok_opname_details',
     ];
 
     /**
@@ -49,7 +54,7 @@ class Generator
         }
 
         // Models that use 'kode' instead of 'id'
-        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT', 'BRG'];
+        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT', 'BRG', 'PBL', 'PBD', 'KST', 'PJL', 'PJD', 'STD'];
         
         if (in_array($model, $modelsWithKode)) {
             // Get count of records for current year-month using kode column
@@ -92,7 +97,12 @@ class Generator
             'BNK' => 'Bank',
             'PRS' => 'Perusahaan',
             'SUP' => 'Supplier',
-            'STF' => 'Staff'
+            'STF' => 'Staff',
+            'PBL' => 'Pembelian',
+            'PBD' => 'Pembelian Detail',
+            'PJL' => 'Penjualan',
+            'PJD' => 'Penjualan Detail',
+            'STD' => 'Stok Opname Detail'
         ];
     }
 }
