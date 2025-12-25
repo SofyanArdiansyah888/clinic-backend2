@@ -86,6 +86,7 @@ Route::prefix('pasien')->group(function () {
 Route::prefix('barang')->group(function () {
     Route::get('/', [BarangController::class, 'index']);
     Route::post('/', [BarangController::class, 'store']);
+    Route::post('/export', [BarangController::class, 'export']);
     Route::get('/{id}', [BarangController::class, 'show']);
     Route::put('/{id}', [BarangController::class, 'update']);
     Route::delete('/{id}', [BarangController::class, 'destroy']);

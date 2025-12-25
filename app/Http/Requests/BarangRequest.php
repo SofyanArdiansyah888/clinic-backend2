@@ -22,7 +22,10 @@ class BarangRequest extends FormRequest
      */
     public function rules(): array
     {
+        $barangId = $this->route('id');
+        
         $rules = [
+            'kode' => ['required', 'string', 'max:255', Rule::unique('barangs', 'kode')->ignore($barangId)],
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:100',
             'satuan' => 'required|string|max:50',
@@ -30,10 +33,12 @@ class BarangRequest extends FormRequest
             'harga_jual' => 'required|numeric|min:0',
             'stok_minimal' => 'required|integer|min:0',
             'stok_aktual' => 'required|integer|min:0',
+            'is_active' => 'boolean',
         ];
 
-        // For update operations, make fields optional and handle unique kode validation
+        // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $rules['kode'] = ['sometimes', 'string', 'max:255', Rule::unique('barangs', 'kode')->ignore($barangId)];
             $rules['nama'] = 'sometimes|string|max:255';
             $rules['kategori'] = 'sometimes|string|max:100';
             $rules['satuan'] = 'sometimes|string|max:50';
@@ -41,18 +46,6 @@ class BarangRequest extends FormRequest
             $rules['harga_jual'] = 'sometimes|numeric|min:0';
             $rules['stok_minimal'] = 'sometimes|integer|min:0';
             $rules['stok_aktual'] = 'sometimes|integer|min:0';
-            
-            // Handle unique kode validation for updates
-            if ($this->has('kode')) {
-                $rules['kode'] = [
-                    'sometimes',
-                    'string',
-                    Rule::unique('barangs', 'kode')->ignore($this->route('barang')),
-                ];
-            }
-        } else {
-            // For store operations, kode is required and must be unique
-            $rules['kode'] = 'required|string|unique:barangs,kode';
         }
 
         return $rules;
@@ -64,11 +57,15 @@ class BarangRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama barang wajib diisi',
             'kode.required' => 'Kode barang wajib diisi',
-            'kode.unique' => 'Kode barang sudah ada',
+            'kode.unique' => 'Kode barang sudah digunakan',
+            'kode.max' => 'Kode barang maksimal 255 karakter',
+            'nama.required' => 'Nama barang wajib diisi',
+            'nama.max' => 'Nama barang maksimal 255 karakter',
             'kategori.required' => 'Kategori wajib diisi',
+            'kategori.max' => 'Kategori maksimal 100 karakter',
             'satuan.required' => 'Satuan wajib diisi',
+            'satuan.max' => 'Satuan maksimal 50 karakter',
             'harga_beli.required' => 'Harga beli wajib diisi',
             'harga_beli.numeric' => 'Harga beli harus berupa angka',
             'harga_beli.min' => 'Harga beli minimal 0',

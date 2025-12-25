@@ -49,7 +49,7 @@ class Generator
         }
 
         // Models that use 'kode' instead of 'id'
-        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT'];
+        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT', 'BRG'];
         
         if (in_array($model, $modelsWithKode)) {
             // Get count of records for current year-month using kode column
