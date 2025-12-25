@@ -15,6 +15,7 @@ class Barang extends Model
         'kode',
         'nama',
         'kategori',
+        'lokasi_barang',
         'satuan',
         'harga_beli',
         'harga_jual',

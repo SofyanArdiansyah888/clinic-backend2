@@ -18,7 +18,7 @@ class PembelianController extends Controller
      */
     public function index()
     {
-        $query = Pembelian::with(['supplier', 'staff']);
+        $query = Pembelian::with(['supplier', 'staff', 'details.barang']);
         
         if (request()->has('tanggal')) {
             $query->whereDate('tanggal', request('tanggal'));
@@ -30,6 +30,14 @@ class PembelianController extends Controller
         
         if (request()->has('supplier_id')) {
             $query->where('supplier_id', request('supplier_id'));
+        }
+        
+        // Filter berdasarkan lokasi barang (apotek/gudang)
+        if (request()->has('lokasi_barang')) {
+            $lokasi = request('lokasi_barang');
+            $query->whereHas('details.barang', function($q) use ($lokasi) {
+                $q->where('lokasi_barang', $lokasi);
+            });
         }
         
         $pembelians = $query->orderBy('tanggal', 'desc')->get();

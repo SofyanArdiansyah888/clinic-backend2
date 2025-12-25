@@ -29,6 +29,14 @@ class KartuStokController extends Controller
             $query->where('tanggal', '<=', $request->tanggal_sampai);
         }
         
+        // Filter berdasarkan lokasi barang (apotek/gudang)
+        if ($request->has('lokasi_barang')) {
+            $lokasi = $request->lokasi_barang;
+            $query->whereHas('barang', function($q) use ($lokasi) {
+                $q->where('lokasi_barang', $lokasi);
+            });
+        }
+        
         $kartuStoks = $query->orderBy('tanggal', 'asc')->get();
         return response()->json($kartuStoks);
     }

@@ -43,6 +43,12 @@ class BarangController extends Controller
             $query->where('is_active', request('is_active'));
         }
         
+        // Filter berdasarkan lokasi barang (apotek/gudang)
+        if (request()->has('lokasi_barang')) {
+            $lokasi = request('lokasi_barang');
+            $query->where('lokasi_barang', $lokasi);
+        }
+        
         // Pagination
         $perPage = request('per_page', request('page_size', 10));
         $page = request('page', 1);
@@ -56,6 +62,7 @@ class BarangController extends Controller
                 'kode' => $barang->kode,
                 'nama' => $barang->nama,
                 'kategori' => $barang->kategori,
+                'lokasi_barang' => $barang->lokasi_barang,
                 'satuan' => $barang->satuan,
                 'harga_beli' => $barang->harga_beli,
                 'harga_jual' => $barang->harga_jual,
@@ -95,6 +102,7 @@ class BarangController extends Controller
             'kode' => $barang->kode,
             'nama' => $barang->nama,
             'kategori' => $barang->kategori,
+            'lokasi_barang' => $barang->lokasi_barang,
             'satuan' => $barang->satuan,
             'harga_beli' => $barang->harga_beli,
             'harga_jual' => $barang->harga_jual,
@@ -118,6 +126,7 @@ class BarangController extends Controller
             'kode' => $barang->kode,
             'nama' => $barang->nama,
             'kategori' => $barang->kategori,
+            'lokasi_barang' => $barang->lokasi_barang,
             'satuan' => $barang->satuan,
             'harga_beli' => $barang->harga_beli,
             'harga_jual' => $barang->harga_jual,
@@ -142,6 +151,7 @@ class BarangController extends Controller
             'kode' => $barang->kode,
             'nama' => $barang->nama,
             'kategori' => $barang->kategori,
+            'lokasi_barang' => $barang->lokasi_barang,
             'satuan' => $barang->satuan,
             'harga_beli' => $barang->harga_beli,
             'harga_jual' => $barang->harga_jual,
@@ -218,6 +228,12 @@ class BarangController extends Controller
         
         if ($request->has('is_active') && $request->is_active !== null) {
             $query->where('is_active', $request->is_active);
+        }
+        
+        // Filter berdasarkan lokasi barang (apotek/gudang)
+        if ($request->has('lokasi_barang')) {
+            $lokasi = $request->lokasi_barang;
+            $query->where('lokasi_barang', $lokasi);
         }
         
         $barangs = $query->orderBy('nama', 'asc')->get();

@@ -28,6 +28,7 @@ class BarangRequest extends FormRequest
             'kode' => ['required', 'string', 'max:255', Rule::unique('barangs', 'kode')->ignore($barangId)],
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:100',
+            'lokasi_barang' => 'nullable|in:apotek,gudang',
             'satuan' => 'required|string|max:50',
             'harga_beli' => 'required|numeric|min:0',
             'harga_jual' => 'required|numeric|min:0',
@@ -41,6 +42,7 @@ class BarangRequest extends FormRequest
             $rules['kode'] = ['sometimes', 'string', 'max:255', Rule::unique('barangs', 'kode')->ignore($barangId)];
             $rules['nama'] = 'sometimes|string|max:255';
             $rules['kategori'] = 'sometimes|string|max:100';
+            $rules['lokasi_barang'] = 'sometimes|nullable|in:apotek,gudang';
             $rules['satuan'] = 'sometimes|string|max:50';
             $rules['harga_beli'] = 'sometimes|numeric|min:0';
             $rules['harga_jual'] = 'sometimes|numeric|min:0';

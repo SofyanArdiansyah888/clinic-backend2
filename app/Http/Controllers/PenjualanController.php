@@ -20,7 +20,7 @@ class PenjualanController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Penjualan::with(['pasien', 'staff']);
+        $query = Penjualan::with(['pasien', 'staff', 'details.barang']);
         
         if ($request->has('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
@@ -32,6 +32,14 @@ class PenjualanController extends Controller
         
         if ($request->has('pasien_id')) {
             $query->where('pasien_id', $request->pasien_id);
+        }
+        
+        // Filter berdasarkan lokasi barang (apotek/gudang)
+        if ($request->has('lokasi_barang')) {
+            $lokasi = $request->lokasi_barang;
+            $query->whereHas('details.barang', function($q) use ($lokasi) {
+                $q->where('lokasi_barang', $lokasi);
+            });
         }
         
         $penjualans = $query->orderBy('tanggal', 'desc')->get();
