@@ -6,6 +6,7 @@ use App\Http\Requests\KonversiBarangRequest;
 use App\Models\KonversiStok;
 use App\Models\KonversiStokDetail;
 use App\Models\Barang;
+use App\Models\KartuStok;
 use App\Utils\Generator;
 use Illuminate\Support\Facades\DB;
 
@@ -16,8 +17,25 @@ class KonversiStokController extends Controller
      */
     public function index()
     {
-        $konversiStoks = KonversiStok::with('details.barang')->get();
-        return response()->json($konversiStoks);
+        $query = KonversiStok::with('details.barang');
+        
+        if (request()->has('search') && request('search')) {
+            $query->where(function($q) {
+                $q->where('kode', 'like', '%' . request('search') . '%')
+                  ->orWhere('keterangan', 'like', '%' . request('search') . '%');
+            });
+        }
+        
+        if (request()->has('tanggal')) {
+            $query->whereDate('tanggal', request('tanggal'));
+        }
+        
+        $konversiStoks = $query->orderBy('tanggal', 'desc')->orderBy('id', 'desc')->get();
+        
+        return response()->json([
+            'data' => $konversiStoks,
+            'total' => $konversiStoks->count(),
+        ]);
     }
 
     /**
@@ -28,33 +46,62 @@ class KonversiStokController extends Controller
 
         DB::beginTransaction();
         try {
-            $konversiStok = new KonversiStok([
-                'id' => Generator::generateID('KVS'),
+            $konversiStok = KonversiStok::create([
+                'kode' => Generator::generateID('KVS'),
                 'tanggal' => $request->tanggal,
-                'keterangan' => $request->keterangan,
+                'keterangan' => $request->keterangan ?? 'Konversi Stok',
                 'is_active' => true,
             ]);
-            $konversiStok->save();
 
             foreach ($request->details as $detail) {
-                $konversiStokDetail = new KonversiStokDetail([
-                    'id' => Generator::generateID('KVD'),
+                $konversiStokDetail = KonversiStokDetail::create([
+                    'kode' => Generator::generateID('KVD'),
                     'konversi_stok_id' => $konversiStok->id,
                     'barang_id' => $detail['barang_id'],
                     'qty' => $detail['qty'],
                     'tipe' => $detail['tipe'],
                     'is_active' => true,
                 ]);
-                $konversiStokDetail->save();
 
-                // Update stock
+                // Update stock and create kartu stok
                 $barang = Barang::find($detail['barang_id']);
-                if ($detail['tipe'] === 'input') {
-                    $barang->stok += $detail['qty'];
-                } else {
-                    $barang->stok -= $detail['qty'];
+                if ($barang) {
+                    // Get last saldo for this barang
+                    $lastKartuStok = KartuStok::where('barang_id', $detail['barang_id'])
+                        ->orderBy('tanggal', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+                    $saldoAwal = $lastKartuStok ? $lastKartuStok->saldo : ($barang->stok_aktual ?? 0);
+                    
+                    if ($detail['tipe'] === 'input') {
+                        $qtyMasuk = $detail['qty'];
+                        $qtyKeluar = 0;
+                        $saldo = $saldoAwal + $qtyMasuk;
+                        $barang->stok_aktual = $saldo;
+                    } else {
+                        $qtyMasuk = 0;
+                        $qtyKeluar = $detail['qty'];
+                        $saldo = $saldoAwal - $qtyKeluar;
+                        $barang->stok_aktual = $saldo;
+                    }
+                    
+                    // Create kartu stok entry
+                    $keteranganDetail = isset($detail['keterangan']) && !empty($detail['keterangan']) ? ' - ' . $detail['keterangan'] : '';
+                    KartuStok::create([
+                        'kode' => Generator::generateID('KST'),
+                        'barang_id' => $detail['barang_id'],
+                        'tanggal' => $request->tanggal,
+                        'keterangan' => 'Konversi Stok - ' . ($request->keterangan ?? 'Konversi Stok') . $keteranganDetail,
+                        'qty_masuk' => $qtyMasuk,
+                        'qty_keluar' => $qtyKeluar,
+                        'saldo' => $saldo,
+                        'referensi' => $konversiStok->kode,
+                        'is_active' => true,
+                    ]);
+                    
+                    $barang->save();
                 }
-                $barang->save();
             }
 
             DB::commit();

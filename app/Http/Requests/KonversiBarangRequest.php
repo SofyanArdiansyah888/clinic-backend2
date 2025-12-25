@@ -23,22 +23,18 @@ class KonversiBarangRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'barang_asal_id' => 'required|exists:barangs,id',
-            'barang_tujuan_id' => 'required|exists:barangs,id',
-            'jumlah_asal' => 'required|integer|min:1',
-            'jumlah_tujuan' => 'required|integer|min:1',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
-            'is_active' => 'boolean',
+            'details' => 'required|array|min:1',
+            'details.*.barang_id' => 'required|exists:barangs,id',
+            'details.*.qty' => 'required|integer|min:1',
+            'details.*.tipe' => 'required|in:input,output',
         ];
 
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['barang_asal_id'] = 'sometimes|exists:barangs,id';
-            $rules['barang_tujuan_id'] = 'sometimes|exists:barangs,id';
-            $rules['jumlah_asal'] = 'sometimes|integer|min:1';
-            $rules['jumlah_tujuan'] = 'sometimes|integer|min:1';
             $rules['tanggal'] = 'sometimes|date';
+            $rules['details'] = 'sometimes|array|min:1';
         }
 
         return $rules;
@@ -50,18 +46,18 @@ class KonversiBarangRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'barang_asal_id.required' => 'Barang asal wajib dipilih',
-            'barang_asal_id.exists' => 'Barang asal tidak ditemukan',
-            'barang_tujuan_id.required' => 'Barang tujuan wajib dipilih',
-            'barang_tujuan_id.exists' => 'Barang tujuan tidak ditemukan',
-            'jumlah_asal.required' => 'Jumlah asal wajib diisi',
-            'jumlah_asal.integer' => 'Jumlah asal harus berupa angka bulat',
-            'jumlah_asal.min' => 'Jumlah asal minimal 1',
-            'jumlah_tujuan.required' => 'Jumlah tujuan wajib diisi',
-            'jumlah_tujuan.integer' => 'Jumlah tujuan harus berupa angka bulat',
-            'jumlah_tujuan.min' => 'Jumlah tujuan minimal 1',
             'tanggal.required' => 'Tanggal wajib diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
+            'details.required' => 'Detail konversi wajib diisi',
+            'details.array' => 'Detail konversi harus berupa array',
+            'details.min' => 'Minimal 1 detail konversi',
+            'details.*.barang_id.required' => 'Barang wajib dipilih',
+            'details.*.barang_id.exists' => 'Barang tidak ditemukan',
+            'details.*.qty.required' => 'Jumlah wajib diisi',
+            'details.*.qty.integer' => 'Jumlah harus berupa angka bulat',
+            'details.*.qty.min' => 'Jumlah minimal 1',
+            'details.*.tipe.required' => 'Tipe wajib diisi',
+            'details.*.tipe.in' => 'Tipe harus input atau output',
         ];
     }
 }

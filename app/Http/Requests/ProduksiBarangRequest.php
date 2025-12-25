@@ -23,22 +23,18 @@ class ProduksiBarangRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'barang_id' => 'required|exists:barangs,id',
-            'jumlah_produksi' => 'required|integer|min:1',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'status' => 'required|in:planning,in_progress,completed,cancelled',
+            'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
-            'is_active' => 'boolean',
+            'details' => 'required|array|min:1',
+            'details.*.barang_id' => 'required|exists:barangs,id',
+            'details.*.qty' => 'required|integer|min:1',
+            'details.*.tipe' => 'required|in:input,output',
         ];
 
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['barang_id'] = 'sometimes|exists:barangs,id';
-            $rules['jumlah_produksi'] = 'sometimes|integer|min:1';
-            $rules['tanggal_mulai'] = 'sometimes|date';
-            $rules['tanggal_selesai'] = 'sometimes|date|after:tanggal_mulai';
-            $rules['status'] = 'sometimes|in:planning,in_progress,completed,cancelled';
+            $rules['tanggal'] = 'sometimes|date';
+            $rules['details'] = 'sometimes|array|min:1';
         }
 
         return $rules;
@@ -50,18 +46,18 @@ class ProduksiBarangRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'barang_id.required' => 'Barang wajib dipilih',
-            'barang_id.exists' => 'Barang tidak ditemukan',
-            'jumlah_produksi.required' => 'Jumlah produksi wajib diisi',
-            'jumlah_produksi.integer' => 'Jumlah produksi harus berupa angka bulat',
-            'jumlah_produksi.min' => 'Jumlah produksi minimal 1',
-            'tanggal_mulai.required' => 'Tanggal mulai wajib diisi',
-            'tanggal_mulai.date' => 'Format tanggal mulai tidak valid',
-            'tanggal_selesai.required' => 'Tanggal selesai wajib diisi',
-            'tanggal_selesai.date' => 'Format tanggal selesai tidak valid',
-            'tanggal_selesai.after' => 'Tanggal selesai harus setelah tanggal mulai',
-            'status.required' => 'Status wajib diisi',
-            'status.in' => 'Status tidak valid',
+            'tanggal.required' => 'Tanggal wajib diisi',
+            'tanggal.date' => 'Format tanggal tidak valid',
+            'details.required' => 'Detail produksi wajib diisi',
+            'details.array' => 'Detail produksi harus berupa array',
+            'details.min' => 'Minimal 1 detail produksi',
+            'details.*.barang_id.required' => 'Barang wajib dipilih',
+            'details.*.barang_id.exists' => 'Barang tidak ditemukan',
+            'details.*.qty.required' => 'Jumlah wajib diisi',
+            'details.*.qty.integer' => 'Jumlah harus berupa angka bulat',
+            'details.*.qty.min' => 'Jumlah minimal 1',
+            'details.*.tipe.required' => 'Tipe wajib diisi',
+            'details.*.tipe.in' => 'Tipe harus input atau output',
         ];
     }
 }

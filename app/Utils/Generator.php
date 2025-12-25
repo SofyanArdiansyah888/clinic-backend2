@@ -17,7 +17,7 @@ class Generator
         'BRG' => 'barangs',
         'APT' => 'appointments',
         'KVS' => 'konversi_stoks',
-        'PRD' => 'produksi_barangs',
+        'PRB' => 'produksi_barangs',
         'STO' => 'stok_opnames',
         'KST' => 'kartu_stoks',
         'PRM' => 'promos',
@@ -32,6 +32,8 @@ class Generator
         'PJL' => 'penjualans',
         'PJD' => 'penjualan_details',
         'STD' => 'stok_opname_details',
+        'KVD' => 'konversi_stok_details',
+        'PRD' => 'produksi_barang_details',
     ];
 
     /**
@@ -54,7 +56,7 @@ class Generator
         }
 
         // Models that use 'kode' instead of 'id'
-        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT', 'BRG', 'PBL', 'PBD', 'KST', 'PJL', 'PJD', 'STD'];
+        $modelsWithKode = ['PAS', 'STF', 'BNK', 'SUP', 'TRT', 'BRG', 'PBL', 'PBD', 'KST', 'PJL', 'PJD', 'STD', 'KVS', 'KVD', 'PRB', 'PRD'];
         
         if (in_array($model, $modelsWithKode)) {
             // Get count of records for current year-month using kode column
@@ -88,7 +90,7 @@ class Generator
             'BRG' => 'Barang',
             'APT' => 'Appointment',
             'KVS' => 'Konversi Stok',
-            'PRD' => 'Produksi Barang',
+            'PRB' => 'Produksi Barang',
             'STO' => 'Stok Opname',
             'KST' => 'Kartu Stok',
             'PRM' => 'Promo',
@@ -102,7 +104,9 @@ class Generator
             'PBD' => 'Pembelian Detail',
             'PJL' => 'Penjualan',
             'PJD' => 'Penjualan Detail',
-            'STD' => 'Stok Opname Detail'
+            'STD' => 'Stok Opname Detail',
+            'KVD' => 'Konversi Stok Detail',
+            'PRD' => 'Produksi Barang Detail'
         ];
     }
 }
