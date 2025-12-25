@@ -96,6 +96,7 @@ Route::prefix('barang')->group(function () {
 Route::prefix('treatment')->group(function () {
     Route::get('/', [TreatmentController::class, 'index']);
     Route::post('/', [TreatmentController::class, 'store']);
+    Route::post('/export', [TreatmentController::class, 'export']);
     Route::get('/{id}', [TreatmentController::class, 'show']);
     Route::put('/{id}', [TreatmentController::class, 'update']);
     Route::delete('/{id}', [TreatmentController::class, 'destroy']);
