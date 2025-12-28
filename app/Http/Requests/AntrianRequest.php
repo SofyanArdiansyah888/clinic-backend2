@@ -23,18 +23,22 @@ class AntrianRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'pasien_id' => 'required|exists:pasien,id',
+            'pasien_id' => 'required|exists:pasiens,id',
+            'staff_id' => 'nullable|exists:staffs,id',
+            // kode is auto-generated on backend, don't accept from request
             'tanggal' => 'required|date',
-            'status' => 'required|in:menunggu,dalam_proses,selesai,dibatalkan',
-            'catatan' => 'nullable|string',
+            'jam' => 'nullable|date_format:H:i:s',
+            'status' => 'nullable|in:menunggu,dipanggil,selesai,batal',
+            'keterangan' => 'nullable|string',
             'is_active' => 'boolean',
         ];
 
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['pasien_id'] = 'sometimes|exists:pasien,id';
+            $rules['pasien_id'] = 'sometimes|exists:pasiens,id';
             $rules['tanggal'] = 'sometimes|date';
-            $rules['status'] = 'sometimes|in:menunggu,dalam_proses,selesai,dibatalkan';
+            $rules['jam'] = 'sometimes|date_format:H:i:s';
+            $rules['status'] = 'sometimes|in:menunggu,dipanggil,selesai,batal';
         }
 
         return $rules;

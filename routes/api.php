@@ -63,7 +63,7 @@ Route::prefix('auth')->group(function () {
 });
 
 // Antrian Routes
-Route::prefix('antrians')->group(function () {
+Route::prefix('antrian')->group(function () {
     Route::get('/', [AntrianController::class, 'index']);
     Route::post('/', [AntrianController::class, 'store']);
     Route::get('/{id}', [AntrianController::class, 'show']);

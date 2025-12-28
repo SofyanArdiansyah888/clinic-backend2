@@ -14,6 +14,7 @@ class Antrian extends Model
     protected $fillable = [
         'kode',
         'pasien_id',
+        'staff_id',
         'tanggal',
         'jam',
         'status',
@@ -23,12 +24,16 @@ class Antrian extends Model
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam' => 'datetime',
         'is_active' => 'boolean',
     ];
 
     public function pasien()
     {
         return $this->belongsTo(Pasien::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
     }
 }
