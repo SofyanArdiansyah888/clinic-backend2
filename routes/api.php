@@ -64,6 +64,7 @@ Route::prefix('auth')->group(function () {
 
 // Antrian Routes
 Route::prefix('antrian')->group(function () {
+    Route::post('/create-pasien-antrian', [AntrianController::class, 'createPasienAntrian']);
     Route::get('/', [AntrianController::class, 'index']);
     Route::post('/', [AntrianController::class, 'store']);
     Route::get('/{id}', [AntrianController::class, 'show']);

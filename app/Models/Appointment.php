@@ -24,7 +24,7 @@ class Appointment extends Model
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam' => 'time',
+        // 'jam' => 'time', // Removed - Laravel doesn't have a 'time' cast, TIME fields are handled as strings
         'is_active' => 'boolean',
     ];
 

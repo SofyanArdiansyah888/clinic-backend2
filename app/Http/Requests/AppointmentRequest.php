@@ -23,24 +23,22 @@ class AppointmentRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'pasien_id' => 'required|exists:pasien,id',
-            'staff_id' => 'required|exists:staff,id',
-            'tanggal' => 'required|date|after:today',
-            'waktu' => 'required|date_format:H:i',
-            'jenis' => 'required|in:umum,spesialis,emergency',
-            'catatan' => 'nullable|string',
-            'status' => 'required|in:terjadwal,selesai,dibatalkan',
+            'pasien_id' => 'required|exists:pasiens,id',
+            'staff_id' => 'required|exists:staffs,id',
+            'tanggal' => 'required|date',
+            'jam' => 'required|date_format:H:i:s',
+            'keterangan' => 'nullable|string',
+            'status' => 'nullable|in:scheduled,confirmed,in_progress,completed,cancelled',
             'is_active' => 'boolean',
         ];
 
         // For update operations, make fields optional
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['pasien_id'] = 'sometimes|exists:pasien,id';
-            $rules['staff_id'] = 'sometimes|exists:staff,id';
+            $rules['pasien_id'] = 'sometimes|exists:pasiens,id';
+            $rules['staff_id'] = 'sometimes|exists:staffs,id';
             $rules['tanggal'] = 'sometimes|date';
-            $rules['waktu'] = 'sometimes|date_format:H:i';
-            $rules['jenis'] = 'sometimes|in:umum,spesialis,emergency';
-            $rules['status'] = 'sometimes|in:terjadwal,selesai,dibatalkan';
+            $rules['jam'] = 'sometimes|date_format:H:i:s';
+            $rules['status'] = 'sometimes|in:scheduled,confirmed,in_progress,completed,cancelled';
         }
 
         return $rules;
@@ -58,12 +56,8 @@ class AppointmentRequest extends FormRequest
             'staff_id.exists' => 'Staff tidak ditemukan',
             'tanggal.required' => 'Tanggal wajib diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
-            'tanggal.after' => 'Tanggal harus setelah hari ini',
-            'waktu.required' => 'Waktu wajib diisi',
-            'waktu.date_format' => 'Format waktu tidak valid (HH:MM)',
-            'jenis.required' => 'Jenis appointment wajib diisi',
-            'jenis.in' => 'Jenis appointment tidak valid',
-            'status.required' => 'Status wajib diisi',
+            'jam.required' => 'Jam wajib diisi',
+            'jam.date_format' => 'Format jam tidak valid (HH:mm:ss)',
             'status.in' => 'Status tidak valid',
         ];
     }

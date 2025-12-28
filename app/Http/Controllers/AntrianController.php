@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AntrianRequest;
 use App\Models\Antrian;
+use App\Models\Pasien;
 use App\Utils\Generator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AntrianController extends Controller
 {
@@ -172,5 +175,87 @@ class AntrianController extends Controller
         $antrian->is_active = false;
         $antrian->save();
         return response()->json(['message' => 'Queue deactivated successfully']);
+    }
+
+    /**
+     * Create new pasien and antrian together
+     */
+    public function createPasienAntrian(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Validate required fields
+            $request->validate([
+                'nama' => 'required|string|max:255',
+                'no_telp' => 'required|string|max:20',
+                'staff_id' => 'required|exists:staffs,id',
+                'tanggal' => 'required|date',
+                'alamat' => 'nullable|string',
+                'email' => 'nullable|email|max:255',
+                'tanggal_lahir' => 'nullable|date',
+                'jenis_kelamin' => 'nullable|in:L,P',
+                'keterangan' => 'nullable|string',
+            ]);
+
+            // Create pasien
+            $pasien = Pasien::create([
+                'kode' => Generator::generateID('PAS'),
+                'nama' => $request->nama,
+                'alamat' => $request->alamat ?? null,
+                'no_telp' => $request->no_telp,
+                'email' => $request->email ?? null,
+                'tanggal_lahir' => $request->tanggal_lahir ?? null,
+                'jenis_kelamin' => $request->jenis_kelamin ?? null,
+                'is_active' => true,
+            ]);
+
+            // Create antrian
+            $kode = Generator::generateID('ANT');
+            while (Antrian::where('kode', $kode)->exists()) {
+                $kode = Generator::generateID('ANT');
+            }
+
+            $tanggalValue = $request->tanggal;
+            $jamValue = $request->jam ?? now()->format('H:i:s');
+
+            // If tanggal includes time, extract date and time separately
+            if (strpos($tanggalValue, ' ') !== false) {
+                $parts = explode(' ', $tanggalValue);
+                $tanggalValue = $parts[0];
+                $jamValue = $parts[1] ?? $jamValue;
+            }
+
+            $antrian = Antrian::create([
+                'kode' => $kode,
+                'pasien_id' => $pasien->id,
+                'staff_id' => $request->staff_id,
+                'tanggal' => $tanggalValue,
+                'jam' => $jamValue,
+                'status' => 'menunggu',
+                'keterangan' => $request->keterangan ?? null,
+                'is_active' => true,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Pasien dan antrian berhasil dibuat',
+                'pasien' => $pasien,
+                'antrian' => $antrian->load(['pasien', 'staff']),
+            ], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Gagal membuat pasien dan antrian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
