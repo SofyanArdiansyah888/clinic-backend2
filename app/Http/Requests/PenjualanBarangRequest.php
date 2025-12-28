@@ -24,13 +24,15 @@ class PenjualanBarangRequest extends FormRequest
     {
         $rules = [
             'tanggal' => 'required|date',
-            'no_invoice' => 'required|string|unique:penjualans,no_invoice',
+            'no_invoice' => 'nullable|string|unique:penjualans,no_invoice',
             'status' => 'required|in:draft,confirmed,completed,cancelled',
             'keterangan' => 'nullable|string',
             'details' => 'required|array|min:1',
             'details.*.barang_id' => 'required|exists:barangs,id',
             'details.*.qty' => 'required|integer|min:1',
             'details.*.harga_jual' => 'required|numeric|min:0',
+            'details.*.diskon' => 'nullable|numeric|min:0',
+            'details.*.subtotal' => 'nullable|numeric|min:0',
             'pasien_id' => 'nullable|exists:pasiens,id',
             'staff_id' => 'nullable|exists:staffs,id',
         ];

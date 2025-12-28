@@ -63,12 +63,22 @@ class PenjualanController extends Controller
                 $staffId = $defaultStaff->id;
             }
 
+            // Generate nomor kwitansi (no_invoice) if not provided
+            $noInvoice = $request->no_invoice;
+            if (!$noInvoice) {
+                $noInvoice = Generator::generateID('PJL');
+                // Ensure uniqueness
+                while (Penjualan::where('no_invoice', $noInvoice)->exists()) {
+                    $noInvoice = Generator::generateID('PJL');
+                }
+            }
+
             $penjualan = Penjualan::create([
                 'kode' => Generator::generateID('PJL'),
                 'pasien_id' => $request->pasien_id ?? null,
                 'staff_id' => $staffId,
                 'tanggal' => $request->tanggal,
-                'no_invoice' => $request->no_invoice,
+                'no_invoice' => $noInvoice,
                 'status' => $request->status ?? 'draft',
                 'keterangan' => $request->keterangan,
                 'total_harga' => 0,
@@ -77,7 +87,8 @@ class PenjualanController extends Controller
 
             $totalHarga = 0;
             foreach ($request->details as $detail) {
-                $subtotal = $detail['qty'] * $detail['harga_jual'];
+                // Use subtotal from request if provided, otherwise calculate
+                $subtotal = $detail['subtotal'] ?? ($detail['qty'] * $detail['harga_jual']);
                 $totalHarga += $subtotal;
                 
                 $penjualanDetail = PenjualanDetail::create([
