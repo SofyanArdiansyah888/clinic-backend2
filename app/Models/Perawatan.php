@@ -29,8 +29,7 @@ class Perawatan extends Model
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam_mulai' => 'time',
-        'jam_selesai' => 'time',
+        // 'jam_mulai' and 'jam_selesai' are TIME fields - handled as strings, Laravel doesn't have a 'time' cast
         'biaya' => 'decimal:2',
         'is_active' => 'boolean',
     ];

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PerawatanRequest;
 use App\Models\Perawatan;
+use App\Utils\Generator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class PerawatanController extends Controller
 {
@@ -40,10 +43,55 @@ class PerawatanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PerawatanRequest $request)
+    public function store(PerawatanRequest $request): JsonResponse
     {
-        $perawatan = Perawatan::create($request->validated());
-        return response()->json($perawatan, 201);
+        // Check if request has details array (new format for treatment reguler)
+        if ($request->has('details') && is_array($request->details)) {
+            DB::beginTransaction();
+            try {
+                $perawatans = [];
+                
+                foreach ($request->details as $detail) {
+                    $perawatan = Perawatan::create([
+                        'kode' => Generator::generateID('PRW'),
+                        'pasien_id' => $request->pasien_id,
+                        'staff_id' => $request->staff_id,
+                        'treatment_id' => $detail['treatment_id'],
+                        'tanggal' => $request->tanggal,
+                        'jam_mulai' => '00:00:00',
+                        'jam_selesai' => '00:00:00',
+                        'diagnosa' => $request->diagnosa,
+                        'tindakan' => $detail['tindakan'],
+                        'biaya' => $detail['total'] ?? $detail['harga'] ?? 0,
+                        'status' => 'planned',
+                        'catatan' => $detail['catatan'] ?? null,
+                        'is_active' => true,
+                    ]);
+                    
+                    $perawatans[] = $perawatan->load(['pasien', 'treatment', 'staff']);
+                }
+                
+                DB::commit();
+                
+                return response()->json([
+                    'message' => 'Treatment berhasil diproses ke kasir pembayaran',
+                    'data' => $perawatans
+                ], 201);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'message' => 'Gagal memproses treatment: ' . $e->getMessage()
+                ], 500);
+            }
+        } else {
+            // Old format (single perawatan)
+            $validated = $request->validated();
+            $validated['kode'] = Generator::generateID('PRW');
+            $validated['is_active'] = $validated['is_active'] ?? true;
+            
+            $perawatan = Perawatan::create($validated);
+            return response()->json($perawatan->load(['pasien', 'treatment', 'staff']), 201);
+        }
     }
 
     /**
