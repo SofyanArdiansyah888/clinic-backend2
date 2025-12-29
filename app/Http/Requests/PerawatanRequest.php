@@ -41,19 +41,52 @@ class PerawatanRequest extends FormRequest
                 'details.*.catatan' => 'nullable|string',
             ];
         } else {
-            // Old format (single perawatan)
+            // Old format (single perawatan) or new detail perawatan format
             $rules = [
                 'pasien_id' => 'required|exists:pasiens,id',
                 'staff_id' => 'required|exists:staffs,id',
-                'treatment_id' => 'required|exists:treatments,id',
+                'antrian_id' => 'nullable|exists:antrians,id',
+                'treatment_id' => 'sometimes|exists:treatments,id',
                 'tanggal' => 'required|date',
                 'diagnosa' => 'required|string',
-                'tindakan' => 'required|string',
+                'tindakan' => 'sometimes|string',
                 'resep' => 'nullable|string',
                 'catatan' => 'nullable|string',
-                'biaya' => 'required|numeric|min:0',
-                'status' => 'required|in:belum_selesai,selesai,dibatalkan',
+                'biaya' => 'sometimes|numeric|min:0',
+                'status' => 'sometimes|in:planned,in_progress,completed,cancelled',
                 'is_active' => 'boolean',
+                // New fields
+                'anamnesis' => 'nullable|string',
+                'pemeriksaan_awal' => 'nullable|string',
+                'pemeriksaan' => 'nullable|string',
+                'kunjungan_berikutnya' => 'nullable|date',
+                'foto_perawatan' => 'nullable|array',
+                'foto_sebelum' => 'nullable|array',
+                'foto_sesudah' => 'nullable|array',
+                // Nested data
+                'reseps' => 'nullable|array',
+                'reseps.*.antrian_id' => 'required|exists:antrians,id',
+                'reseps.*.tanggal' => 'nullable|date',
+                'reseps.*.status' => 'nullable|in:draft,confirmed,completed,cancelled',
+                'reseps.*.barangs' => 'required|array|min:1',
+                'reseps.*.barangs.*.barang_id' => 'required|exists:barangs,id',
+                'reseps.*.barangs.*.kode_barang' => 'required|string',
+                'reseps.*.barangs.*.nama_barang' => 'required|string',
+                'reseps.*.barangs.*.jumlah' => 'required|numeric|min:0',
+                'reseps.*.barangs.*.unit' => 'required|string',
+                'reseps.*.barangs.*.harga' => 'nullable|numeric|min:0',
+                'reseps.*.barangs.*.total' => 'required|numeric|min:0',
+                'tindakans' => 'nullable|array',
+                'tindakans.*.treatment_id' => 'required|exists:treatments,id',
+                'tindakans.*.tanggal' => 'nullable|date',
+                'tindakans.*.jumlah' => 'required|integer|min:1',
+                'tindakans.*.beautician_id' => 'nullable|exists:staffs,id',
+                'tindakans.*.harga' => 'required|numeric|min:0',
+                'tindakans.*.diskon' => 'nullable|numeric|min:0',
+                'tindakans.*.rp_percent' => 'nullable|numeric|min:0',
+                'tindakans.*.total' => 'required|numeric|min:0',
+                'tindakans.*.status' => 'nullable|in:draft,confirmed,completed,cancelled',
+                'tindakans.*.catatan' => 'nullable|string',
             ];
         }
 

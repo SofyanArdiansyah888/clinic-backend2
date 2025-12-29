@@ -16,6 +16,7 @@ class Perawatan extends Model
         'pasien_id',
         'treatment_id',
         'staff_id',
+        'antrian_id',
         'tanggal',
         'jam_mulai',
         'jam_selesai',
@@ -24,13 +25,24 @@ class Perawatan extends Model
         'tindakan',
         'catatan',
         'biaya',
+        'anamnesis',
+        'pemeriksaan_awal',
+        'pemeriksaan',
+        'kunjungan_berikutnya',
+        'foto_perawatan',
+        'foto_sebelum',
+        'foto_sesudah',
         'is_active',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
+        'kunjungan_berikutnya' => 'date',
         // 'jam_mulai' and 'jam_selesai' are TIME fields - handled as strings, Laravel doesn't have a 'time' cast
         'biaya' => 'decimal:2',
+        'foto_perawatan' => 'array',
+        'foto_sebelum' => 'array',
+        'foto_sesudah' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -47,5 +59,20 @@ class Perawatan extends Model
     public function staff()
     {
         return $this->belongsTo(Staff::class);
+    }
+
+    public function antrian()
+    {
+        return $this->belongsTo(Antrian::class);
+    }
+
+    public function reseps()
+    {
+        return $this->hasMany(PerawatanResep::class);
+    }
+
+    public function tindakans()
+    {
+        return $this->hasMany(PerawatanTindakan::class);
     }
 }

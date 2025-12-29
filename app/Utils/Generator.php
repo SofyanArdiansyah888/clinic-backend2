@@ -35,6 +35,7 @@ class Generator
         'KVD' => 'konversi_stok_details',
         'PRD' => 'produksi_barang_details',
         'PRW' => 'perawatans',
+        'RES' => 'perawatan_resep',
     ];
 
     /**
@@ -57,7 +58,7 @@ class Generator
         }
 
         // Models that use 'kode' instead of 'id'
-        $modelsWithKode = ['PAS', 'ANT', 'APT', 'STF', 'BNK', 'SUP', 'TRT', 'BRG', 'PBL', 'PBD', 'KST', 'PJL', 'PJD', 'STD', 'KVS', 'KVD', 'PRB', 'PRD', 'PRW'];
+        $modelsWithKode = ['PAS', 'ANT', 'APT', 'STF', 'BNK', 'SUP', 'TRT', 'BRG', 'PBL', 'PBD', 'KST', 'PJL', 'PJD', 'STD', 'KVS', 'KVD', 'PRB', 'PRD', 'PRW', 'RES'];
         
         if (in_array($model, $modelsWithKode)) {
             // Get count of records for current year-month using kode column
@@ -108,7 +109,8 @@ class Generator
             'STD' => 'Stok Opname Detail',
             'KVD' => 'Konversi Stok Detail',
             'PRD' => 'Produksi Barang Detail',
-            'PRW' => 'Perawatan'
+            'PRW' => 'Perawatan',
+            'RES' => 'Perawatan Resep'
         ];
     }
 }

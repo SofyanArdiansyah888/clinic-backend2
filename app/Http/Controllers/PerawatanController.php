@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PerawatanRequest;
 use App\Models\Perawatan;
+use App\Models\PerawatanResep;
+use App\Models\PerawatanResepBarang;
+use App\Models\PerawatanTindakan;
 use App\Utils\Generator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +18,7 @@ class PerawatanController extends Controller
      */
     public function index()
     {
-        $query = Perawatan::with(['pasien', 'treatment', 'staff']);
+        $query = Perawatan::with(['pasien', 'treatment', 'staff', 'antrian', 'reseps.barangs', 'tindakans.treatment', 'tindakans.beautician']);
         
         if (request()->has('tanggal')) {
             $query->whereDate('tanggal', request('tanggal'));
@@ -68,7 +71,7 @@ class PerawatanController extends Controller
                         'is_active' => true,
                     ]);
                     
-                    $perawatans[] = $perawatan->load(['pasien', 'treatment', 'staff']);
+                    $perawatans[] = $perawatan->load(['pasien', 'treatment', 'staff', 'antrian']);
                 }
                 
                 DB::commit();
@@ -84,13 +87,77 @@ class PerawatanController extends Controller
                 ], 500);
             }
         } else {
-            // Old format (single perawatan)
-            $validated = $request->validated();
-            $validated['kode'] = Generator::generateID('PRW');
-            $validated['is_active'] = $validated['is_active'] ?? true;
-            
-            $perawatan = Perawatan::create($validated);
-            return response()->json($perawatan->load(['pasien', 'treatment', 'staff']), 201);
+            // New detail perawatan format or old single perawatan format
+            DB::beginTransaction();
+            try {
+                $validated = $request->validated();
+                $validated['kode'] = Generator::generateID('PRW');
+                $validated['is_active'] = $validated['is_active'] ?? true;
+                
+                $perawatan = Perawatan::create($validated);
+                
+                // Handle reseps if provided
+                if ($request->has('reseps') && is_array($request->reseps)) {
+                    foreach ($request->reseps as $resepData) {
+                        $resep = PerawatanResep::create([
+                            'perawatan_id' => $perawatan->id,
+                            'antrian_id' => $resepData['antrian_id'],
+                            'pasien_id' => $perawatan->pasien_id,
+                            'staff_id' => $perawatan->staff_id,
+                            'kode' => Generator::generateID('RES'),
+                            'tanggal' => $resepData['tanggal'] ?? now(),
+                            'status' => $resepData['status'] ?? 'draft',
+                            'is_active' => true,
+                        ]);
+                        
+                        // Handle barangs
+                        if (isset($resepData['barangs']) && is_array($resepData['barangs'])) {
+                            foreach ($resepData['barangs'] as $barangData) {
+                                PerawatanResepBarang::create([
+                                    'perawatan_resep_id' => $resep->id,
+                                    'barang_id' => $barangData['barang_id'],
+                                    'kode_barang' => $barangData['kode_barang'],
+                                    'nama_barang' => $barangData['nama_barang'],
+                                    'jumlah' => $barangData['jumlah'],
+                                    'unit' => $barangData['unit'],
+                                    'harga' => $barangData['harga'] ?? null,
+                                    'total' => $barangData['total'],
+                                    'is_active' => true,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                
+                // Handle tindakans if provided
+                if ($request->has('tindakans') && is_array($request->tindakans)) {
+                    foreach ($request->tindakans as $tindakanData) {
+                        PerawatanTindakan::create([
+                            'perawatan_id' => $perawatan->id,
+                            'treatment_id' => $tindakanData['treatment_id'],
+                            'tanggal' => $tindakanData['tanggal'] ?? now(),
+                            'jumlah' => $tindakanData['jumlah'],
+                            'beautician_id' => $tindakanData['beautician_id'] ?? null,
+                            'harga' => $tindakanData['harga'],
+                            'diskon' => $tindakanData['diskon'] ?? null,
+                            'rp_percent' => $tindakanData['rp_percent'] ?? null,
+                            'total' => $tindakanData['total'],
+                            'status' => $tindakanData['status'] ?? 'draft',
+                            'catatan' => $tindakanData['catatan'] ?? null,
+                            'is_active' => true,
+                        ]);
+                    }
+                }
+                
+                DB::commit();
+                
+                return response()->json($perawatan->load(['pasien', 'treatment', 'staff', 'antrian', 'reseps.barangs', 'tindakans.treatment', 'tindakans.beautician']), 201);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'message' => 'Gagal membuat perawatan: ' . $e->getMessage()
+                ], 500);
+            }
         }
     }
 
@@ -99,7 +166,7 @@ class PerawatanController extends Controller
      */
     public function show(string $id)
     {
-        $perawatan = Perawatan::with(['pasien', 'treatment', 'staff'])->findOrFail($id);
+        $perawatan = Perawatan::with(['pasien', 'treatment', 'staff', 'antrian', 'reseps.barangs', 'tindakans.treatment', 'tindakans.beautician'])->findOrFail($id);
         return response()->json($perawatan);
     }
 
@@ -108,10 +175,84 @@ class PerawatanController extends Controller
      */
     public function update(PerawatanRequest $request, string $id)
     {
-        $perawatan = Perawatan::findOrFail($id);
-        $perawatan->update($request->validated());
-        
-        return response()->json($perawatan);
+        DB::beginTransaction();
+        try {
+            $perawatan = Perawatan::findOrFail($id);
+            $validated = $request->validated();
+            
+            // Extract nested data before updating perawatan
+            $reseps = $validated['reseps'] ?? null;
+            $tindakans = $validated['tindakans'] ?? null;
+            unset($validated['reseps'], $validated['tindakans']);
+            
+            $perawatan->update($validated);
+            
+            // Handle reseps update (delete existing and create new)
+            if ($reseps !== null) {
+                // Delete existing reseps and their barangs (cascade)
+                $perawatan->reseps()->delete();
+                
+                foreach ($reseps as $resepData) {
+                    $resep = PerawatanResep::create([
+                        'perawatan_id' => $perawatan->id,
+                        'antrian_id' => $resepData['antrian_id'],
+                        'pasien_id' => $perawatan->pasien_id,
+                        'staff_id' => $perawatan->staff_id,
+                        'kode' => Generator::generateID('RES'),
+                        'tanggal' => $resepData['tanggal'] ?? now(),
+                        'status' => $resepData['status'] ?? 'draft',
+                        'is_active' => true,
+                    ]);
+                    
+                    if (isset($resepData['barangs']) && is_array($resepData['barangs'])) {
+                        foreach ($resepData['barangs'] as $barangData) {
+                            PerawatanResepBarang::create([
+                                'perawatan_resep_id' => $resep->id,
+                                'barang_id' => $barangData['barang_id'],
+                                'kode_barang' => $barangData['kode_barang'],
+                                'nama_barang' => $barangData['nama_barang'],
+                                'jumlah' => $barangData['jumlah'],
+                                'unit' => $barangData['unit'],
+                                'harga' => $barangData['harga'] ?? null,
+                                'total' => $barangData['total'],
+                                'is_active' => true,
+                            ]);
+                        }
+                    }
+                }
+            }
+            
+            // Handle tindakans update (delete existing and create new)
+            if ($tindakans !== null) {
+                $perawatan->tindakans()->delete();
+                
+                foreach ($tindakans as $tindakanData) {
+                    PerawatanTindakan::create([
+                        'perawatan_id' => $perawatan->id,
+                        'treatment_id' => $tindakanData['treatment_id'],
+                        'tanggal' => $tindakanData['tanggal'] ?? now(),
+                        'jumlah' => $tindakanData['jumlah'],
+                        'beautician_id' => $tindakanData['beautician_id'] ?? null,
+                        'harga' => $tindakanData['harga'],
+                        'diskon' => $tindakanData['diskon'] ?? null,
+                        'rp_percent' => $tindakanData['rp_percent'] ?? null,
+                        'total' => $tindakanData['total'],
+                        'status' => $tindakanData['status'] ?? 'draft',
+                        'catatan' => $tindakanData['catatan'] ?? null,
+                        'is_active' => true,
+                    ]);
+                }
+            }
+            
+            DB::commit();
+            
+            return response()->json($perawatan->load(['pasien', 'treatment', 'staff', 'antrian', 'reseps.barangs', 'tindakans.treatment', 'tindakans.beautician']));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => 'Gagal mengupdate perawatan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
