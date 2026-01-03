@@ -28,7 +28,7 @@ class AntrianRequest extends FormRequest
             // kode is auto-generated on backend, don't accept from request
             'tanggal' => 'required|date',
             'jam' => 'nullable|date_format:H:i:s',
-            'status' => 'nullable|in:menunggu,dipanggil,selesai,batal',
+            'status' => 'nullable|in:menunggu,dipanggil,menunggu perawatan,sedang perawatan,selesai,batal',
             'keterangan' => 'nullable|string',
             'is_active' => 'boolean',
         ];
@@ -38,7 +38,7 @@ class AntrianRequest extends FormRequest
             $rules['pasien_id'] = 'sometimes|exists:pasiens,id';
             $rules['tanggal'] = 'sometimes|date';
             $rules['jam'] = 'sometimes|date_format:H:i:s';
-            $rules['status'] = 'sometimes|in:menunggu,dipanggil,selesai,batal';
+            $rules['status'] = 'sometimes|in:menunggu,dipanggil,menunggu perawatan,sedang perawatan,selesai,batal';
         }
 
         return $rules;
