@@ -29,4 +29,9 @@ class PenjualanDetail extends Model
     {
         return $this->belongsTo(Barang::class);
     }
+
+    public function treatment()
+    {
+        return $this->belongsTo(Treatment::class);
+    }
 }

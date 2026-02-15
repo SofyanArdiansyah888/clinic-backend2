@@ -20,7 +20,7 @@ class PenjualanController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Penjualan::with(['pasien', 'staff', 'details.barang']);
+        $query = Penjualan::with(['pasien', 'staff', 'details.barang', 'details.treatment']);
         
         if ($request->has('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
@@ -91,43 +91,49 @@ class PenjualanController extends Controller
                 $subtotal = $detail['subtotal'] ?? ($detail['qty'] * $detail['harga_jual']);
                 $totalHarga += $subtotal;
                 
+                $jenisPenjualan = $detail['jenis_penjualan'] ?? 'barang';
+                
                 $penjualanDetail = PenjualanDetail::create([
                     'kode' => Generator::generateID('PJD'),
                     'penjualan_id' => $penjualan->id,
-                    'barang_id' => $detail['barang_id'],
+                    'barang_id' => $detail['barang_id'] ?? null,
+                    'treatment_id' => $detail['treatment_id'] ?? null,
+                    'jenis_penjualan' => $jenisPenjualan,
                     'qty' => $detail['qty'],
                     'harga_jual' => $detail['harga_jual'],
                     'subtotal' => $subtotal,
                     'is_active' => true,
                 ]);
 
-                // Create kartu stok entry
-                $barang = Barang::find($detail['barang_id']);
-                if ($barang) {
-                    // Get last saldo for this barang
-                    $lastKartuStok = KartuStok::where('barang_id', $detail['barang_id'])
-                        ->orderBy('tanggal', 'desc')
-                        ->orderBy('id', 'desc')
-                        ->first();
+                // Create kartu stok entry only for barang (not for treatment)
+                if ($jenisPenjualan === 'barang' && !empty($detail['barang_id'])) {
+                    $barang = Barang::find($detail['barang_id']);
+                    if ($barang) {
+                        // Get last saldo for this barang
+                        $lastKartuStok = KartuStok::where('barang_id', $detail['barang_id'])
+                            ->orderBy('tanggal', 'desc')
+                            ->orderBy('id', 'desc')
+                            ->first();
 
-                    $saldoAwal = $lastKartuStok ? $lastKartuStok->saldo : ($barang->stok_aktual ?? 0);
-                    $saldo = $saldoAwal - $detail['qty']; // Decrease stock for sales
+                        $saldoAwal = $lastKartuStok ? $lastKartuStok->saldo : ($barang->stok_aktual ?? 0);
+                        $saldo = $saldoAwal - $detail['qty']; // Decrease stock for sales
 
-                    $kartuStok = KartuStok::create([
-                        'kode' => Generator::generateID('KST'),
-                        'barang_id' => $detail['barang_id'],
-                        'tanggal' => $request->tanggal,
-                        'keterangan' => 'Penjualan - No. Invoice: ' . $request->no_invoice,
-                        'qty_masuk' => 0,
-                        'qty_keluar' => $detail['qty'],
-                        'saldo' => $saldo,
-                        'referensi' => $penjualan->kode,
-                        'is_active' => true,
-                    ]);
+                        $kartuStok = KartuStok::create([
+                            'kode' => Generator::generateID('KST'),
+                            'barang_id' => $detail['barang_id'],
+                            'tanggal' => $request->tanggal,
+                            'keterangan' => 'Penjualan - No. Invoice: ' . $request->no_invoice,
+                            'qty_masuk' => 0,
+                            'qty_keluar' => $detail['qty'],
+                            'saldo' => $saldo,
+                            'referensi' => $penjualan->kode,
+                            'is_active' => true,
+                        ]);
 
-                    // Update stok_aktual
-                    $barang->stok_aktual = $saldo;
-                    $barang->save();
+                        // Update stok_aktual
+                        $barang->stok_aktual = $saldo;
+                        $barang->save();
+                    }
                 }
             }
 
@@ -135,7 +141,7 @@ class PenjualanController extends Controller
             
             DB::commit();
             
-            $penjualan->load(['pasien', 'staff', 'details.barang']);
+            $penjualan->load(['pasien', 'staff', 'details.barang', 'details.treatment']);
             return response()->json($penjualan, 201);
             
         } catch (\Exception $e) {
@@ -157,7 +163,7 @@ class PenjualanController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $penjualan = Penjualan::with(['pasien', 'staff', 'details.barang'])->findOrFail($id);
+        $penjualan = Penjualan::with(['pasien', 'staff', 'details.barang', 'details.treatment'])->findOrFail($id);
         return response()->json($penjualan);
     }
 

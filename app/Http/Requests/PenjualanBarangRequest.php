@@ -28,7 +28,9 @@ class PenjualanBarangRequest extends FormRequest
             'status' => 'required|in:draft,confirmed,completed,cancelled',
             'keterangan' => 'nullable|string',
             'details' => 'required|array|min:1',
-            'details.*.barang_id' => 'required|exists:barangs,id',
+            'details.*.jenis_penjualan' => 'required|in:barang,treatment',
+            'details.*.barang_id' => 'required_if:details.*.jenis_penjualan,barang|nullable|exists:barangs,id',
+            'details.*.treatment_id' => 'required_if:details.*.jenis_penjualan,treatment|nullable|exists:treatments,id',
             'details.*.qty' => 'required|integer|min:1',
             'details.*.harga_jual' => 'required|numeric|min:0',
             'details.*.diskon' => 'nullable|numeric|min:0',
@@ -49,6 +51,36 @@ class PenjualanBarangRequest extends FormRequest
     }
 
     /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->has('details')) {
+                foreach ($this->input('details', []) as $index => $detail) {
+                    $jenisPenjualan = $detail['jenis_penjualan'] ?? null;
+                    
+                    if ($jenisPenjualan === 'barang') {
+                        if (empty($detail['barang_id'])) {
+                            $validator->errors()->add("details.{$index}.barang_id", 'Barang wajib dipilih untuk jenis penjualan barang');
+                        }
+                        if (!empty($detail['treatment_id'])) {
+                            $validator->errors()->add("details.{$index}.treatment_id", 'Treatment tidak boleh diisi untuk jenis penjualan barang');
+                        }
+                    } elseif ($jenisPenjualan === 'treatment') {
+                        if (empty($detail['treatment_id'])) {
+                            $validator->errors()->add("details.{$index}.treatment_id", 'Treatment wajib dipilih untuk jenis penjualan treatment');
+                        }
+                        if (!empty($detail['barang_id'])) {
+                            $validator->errors()->add("details.{$index}.barang_id", 'Barang tidak boleh diisi untuk jenis penjualan treatment');
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Get custom messages for validator errors.
      */
     public function messages(): array
@@ -62,8 +94,12 @@ class PenjualanBarangRequest extends FormRequest
             'status.in' => 'Status tidak valid',
             'details.required' => 'Detail penjualan wajib diisi',
             'details.min' => 'Minimal 1 item harus ditambahkan',
-            'details.*.barang_id.required' => 'Barang wajib dipilih',
+            'details.*.jenis_penjualan.required' => 'Jenis penjualan wajib diisi',
+            'details.*.jenis_penjualan.in' => 'Jenis penjualan harus barang atau treatment',
+            'details.*.barang_id.required_if' => 'Barang wajib dipilih untuk jenis penjualan barang',
             'details.*.barang_id.exists' => 'Barang tidak ditemukan',
+            'details.*.treatment_id.required_if' => 'Treatment wajib dipilih untuk jenis penjualan treatment',
+            'details.*.treatment_id.exists' => 'Treatment tidak ditemukan',
             'details.*.qty.required' => 'Jumlah wajib diisi',
             'details.*.qty.integer' => 'Jumlah harus berupa angka',
             'details.*.qty.min' => 'Jumlah minimal 1',
