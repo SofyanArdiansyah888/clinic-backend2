@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BankRequest;
 use App\Models\Bank;
-use App\Utils\Generator;
 
 class BankController extends Controller
 {
@@ -50,16 +49,15 @@ class BankController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(BankRequest $request)
-    {
+    { 
         $bank = new Bank([
-            'id' => Generator::generateID('BNK'),
-            'no_bank' => $request->no_bank,
+            'kode' => $request->kode,
             'nama_bank' => $request->nama_bank,
             'jenis_bank' => $request->jenis_bank,
             'saldo_awal' => $request->saldo_awal,
             'no_rekening' => $request->no_rekening,
             'atas_nama' => $request->atas_nama,
-            'is_active' => $request->is_active ?? true,
+            'is_active' => $request->is_active ?? true, 
         ]);
         $bank->save();
 

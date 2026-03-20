@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations. 
      */
-    public function up(): void
+    public function up(): void 
     {
         Schema::create('banks', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('no_bank')->unique();
+            $table->id();
+            $table->string('kode')->unique();
             $table->string('nama_bank');
             $table->enum('jenis_bank', ['bank', 'e-money']);
             $table->decimal('saldo_awal', 15, 2)->default(0);

@@ -55,9 +55,9 @@ class DatabaseSeeder extends Seeder
         // website: string, nullable
         // npwp: string, nullable
         // is_active: boolean, default true
-        // timestamps: otomatis
+        // timestamps: otomatis 
         Perusahaan::create([
-            'kode' => 'PRS001',
+            'kode' => Generator::generateID('PRS'),
             'nama' => 'Klinik Sehat Mandiri',
             'alamat' => 'Jl. Kesehatan No. 123, Jakarta Pusat 10110',
             'telepon' => '021-12345678',
@@ -137,10 +137,10 @@ class DatabaseSeeder extends Seeder
         // timestamps: otomatis
 
         Staff::create([
-            'kode' => 'STAFF001',
+            'kode' => Generator::generateID('STF'),
             'nama' => 'Dr. Sarah Wilson',
             'nip' => 'DOC001',
-            'jabatan' => 'Dokter Utama',
+            'jabatan' => 'Dokter',
             'departemen' => 'Medis',
             'no_telp' => '081234567890',
             'email' => 'doctor@kliniksehat.com',
@@ -150,7 +150,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Staff::create([
-            'kode' => 'STAFF002',
+            'kode' => Generator::generateID('STF'),
             'nama' => 'Maria Garcia',
             'nip' => 'STF001',
             'jabatan' => 'Perawat',
@@ -163,10 +163,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Staff::create([
-            'kode' => 'STAFF003',
+            'kode' => Generator::generateID('STF'),
             'nama' => 'Dr. Ahmad Rahman',
             'nip' => 'DOC002',
-            'jabatan' => 'Dokter Spesialis',
+            'jabatan' => 'Dokter',
             'departemen' => 'Spesialis',
             'no_telp' => '081234567892',
             'email' => 'ahmad@kliniksehat.com',
@@ -181,19 +181,18 @@ class DatabaseSeeder extends Seeder
     private function seedBanks()
     {
         // Sesuai dengan struktur tabel banks (migration: create_banks_table)
-        // id: string (menggunakan Generator::generateID('BNK'))
-        // no_bank: string, unique
-        // nama_bank: string
+        // id: auto increment (tidak perlu di-set)
+        // kode: string, unique
+        // nama_bank: string 
         // jenis_bank: enum('bank', 'e-money')
         // saldo_awal: decimal(15,2) default 0
         // no_rekening: string
         // atas_nama: string
         // is_active: boolean, default true
-        // timestamps: otomatis
+        // timestamps: otomatis 
 
         $banks = [
             [
-                'no_bank' => 'BCA001',
                 'nama_bank' => 'Bank Central Asia',
                 'jenis_bank' => 'bank',
                 'saldo_awal' => 50000000.00,
@@ -202,7 +201,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'no_bank' => 'MANDIRI001',
                 'nama_bank' => 'Bank Mandiri',
                 'jenis_bank' => 'bank',
                 'saldo_awal' => 30000000.00,
@@ -211,7 +209,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'no_bank' => 'BRI001',
                 'nama_bank' => 'Bank Rakyat Indonesia',
                 'jenis_bank' => 'bank',
                 'saldo_awal' => 25000000.00,
@@ -220,7 +217,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'no_bank' => 'OVO001',
                 'nama_bank' => 'OVO',
                 'jenis_bank' => 'e-money',
                 'saldo_awal' => 5000000.00,
@@ -232,7 +228,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($banks as $bank) {
             Bank::create([
-                'id' => Generator::generateID('BNK'),
+                'kode' => Generator::generateID('BNK'),
                 ...$bank
             ]);
         }
@@ -255,7 +251,6 @@ class DatabaseSeeder extends Seeder
 
         $treatments = [
             [
-                'kode' => 'TRT001',
                 'nama' => 'Konsultasi Umum',
                 'deskripsi' => 'Konsultasi dengan dokter umum untuk pemeriksaan kesehatan rutin',
                 'durasi' => 30,
@@ -264,7 +259,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'TRT002',
                 'nama' => 'Pemeriksaan Tekanan Darah',
                 'deskripsi' => 'Pemeriksaan tekanan darah untuk monitoring kesehatan',
                 'durasi' => 15,
@@ -273,7 +267,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'TRT003',
                 'nama' => 'Suntik Vitamin',
                 'deskripsi' => 'Suntik vitamin untuk meningkatkan daya tahan tubuh',
                 'durasi' => 20,
@@ -282,7 +275,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'TRT004',
                 'nama' => 'Pemeriksaan Lab Darah',
                 'deskripsi' => 'Pemeriksaan laboratorium darah lengkap',
                 'durasi' => 45,
@@ -291,7 +283,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'TRT005',
                 'nama' => 'Konsultasi Spesialis',
                 'deskripsi' => 'Konsultasi dengan dokter spesialis',
                 'durasi' => 60,
@@ -302,7 +293,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($treatments as $treatment) {
-            Treatment::create($treatment);
+            Treatment::create([
+                'kode' => Generator::generateID('TRT'),
+                ...$treatment
+            ]);
         }
 
         $this->command->info('Treatments seeded successfully.');
@@ -324,7 +318,6 @@ class DatabaseSeeder extends Seeder
 
         $suppliers = [
             [
-                'kode' => 'SUP001',
                 'nama' => 'PT. Farmasi Sehat',
                 'alamat' => 'Jl. Farmasi No. 100, Jakarta Barat',
                 'no_telp' => '021-12345678',
@@ -334,7 +327,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'SUP002',
                 'nama' => 'CV. Alat Medis Jaya',
                 'alamat' => 'Jl. Medis No. 200, Jakarta Timur',
                 'no_telp' => '021-87654321',
@@ -344,7 +336,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'SUP003',
                 'nama' => 'PT. Suplai Klinik',
                 'alamat' => 'Jl. Klinik No. 300, Jakarta Selatan',
                 'no_telp' => '021-555666777',
@@ -356,7 +347,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($suppliers as $supplier) {
-            Supplier::create($supplier);
+            Supplier::create([
+                'kode' => Generator::generateID('SUP'),
+                ...$supplier
+            ]);
         }
 
         $this->command->info('Suppliers seeded successfully.');
@@ -379,7 +373,6 @@ class DatabaseSeeder extends Seeder
 
         $barangs = [
             [
-                'kode' => 'PAR500',
                 'nama' => 'Paracetamol 500mg',
                 'kategori' => 'Obat',
                 'satuan' => 'Tablet',
@@ -390,7 +383,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'AMO500',
                 'nama' => 'Amoxicillin 500mg',
                 'kategori' => 'Obat',
                 'satuan' => 'Kapsul',
@@ -401,7 +393,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'TENS001',
                 'nama' => 'Tensimeter Digital',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Unit',
@@ -412,7 +403,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'STET001',
                 'nama' => 'Stetoskop',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Unit',
@@ -423,7 +413,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'SYR5ML',
                 'nama' => 'Syringe 5ml',
                 'kategori' => 'Alat Medis',
                 'satuan' => 'Pcs',
@@ -434,7 +423,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'kode' => 'ALK70',
                 'nama' => 'Alkohol 70%',
                 'kategori' => 'Disinfektan',
                 'satuan' => 'Botol',
@@ -447,7 +435,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($barangs as $barang) {
-            Barang::create($barang);
+            Barang::create([
+                'kode' => Generator::generateID('BRG'),
+                ...$barang
+            ]);
         }
 
         $this->command->info('Barangs seeded successfully.');

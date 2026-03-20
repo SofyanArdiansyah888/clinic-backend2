@@ -23,7 +23,7 @@ class BankRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'no_bank' => 'required|string|max:50|unique:banks,no_bank',
+            'kode' => 'required|string|max:50|unique:banks,kode',
             'nama_bank' => 'required|string|max:255',
             'jenis_bank' => 'required|in:bank,e-money',
             'saldo_awal' => 'required|numeric|min:0',
@@ -32,7 +32,7 @@ class BankRequest extends FormRequest
             'is_active' => 'boolean',
         ];
 
-        // For update operations, make fields optional and handle unique no_bank validation
+        // For update operations, make fields optional and handle unique kode validation
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules['nama_bank'] = 'sometimes|string|max:255';
             $rules['jenis_bank'] = 'sometimes|in:bank,e-money';
@@ -40,14 +40,14 @@ class BankRequest extends FormRequest
             $rules['no_rekening'] = 'sometimes|string|max:50';
             $rules['atas_nama'] = 'sometimes|string|max:255';
             
-            // Handle unique no_bank validation for updates
-            if ($this->has('no_bank')) {
+            // Handle unique kode validation for updates
+            if ($this->has('kode')) {
                 $bankId = $this->route('id');
-                $rules['no_bank'] = [
+                $rules['kode'] = [
                     'sometimes',
-                    'string',
+                    'string', 
                     'max:50',
-                    Rule::unique('banks', 'no_bank')->ignore($bankId),
+                    Rule::unique('banks', 'kode')->ignore($bankId),
                 ];
             }
         }
@@ -61,9 +61,9 @@ class BankRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'no_bank.required' => 'Kode bank wajib diisi',
-            'no_bank.unique' => 'Kode bank sudah ada',
-            'no_bank.max' => 'Kode bank maksimal 50 karakter',
+            'kode.required' => 'Kode bank wajib diisi',
+            'kode.unique' => 'Kode bank sudah ada',
+            'kode.max' => 'Kode bank maksimal 50 karakter',
             'nama_bank.required' => 'Nama bank wajib diisi',
             'nama_bank.max' => 'Nama bank maksimal 255 karakter',
             'jenis_bank.required' => 'Jenis bank wajib dipilih',

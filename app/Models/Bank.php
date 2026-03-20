@@ -12,10 +12,10 @@ class Bank extends Model
     protected $table = 'banks';
     
     protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
-    protected $guarded = [];
+    protected $guarded = []; 
 
     protected $casts = [
         'is_active' => 'boolean',
